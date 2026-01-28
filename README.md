@@ -3,7 +3,7 @@ Memory systems and peripherals implemented on Tang Nano 20K for Intersil IM6100 
 
 This document is written mostly in Japanese, so please use machine translation if necessary.
 
-![](../images/title.jpg)
+![](images/title.jpg)
 # 概要
 - PDP-8の命令セットを持つCPU「Intersil IM6100」のメモリシステムと周辺回路をFPGA(TangNano20K)上に実装する試みです．
 - FPGAに実装するのはメモリ，UART, HDDなどの周辺装置の部分だけで，CPU自体は本物を使用します．ソフトウェアやFPGAによるシミュレータやエミュレータではなく，実物のCPUを動かします．
