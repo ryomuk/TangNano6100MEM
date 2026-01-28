@@ -1,0 +1,135 @@
+(footprint "SW_SPDT_Toggle"
+	(version 20241229)
+	(generator "pcbnew")
+	(generator_version "9.0")
+	(layer "F.Cu")
+	(descr "https://akizukidenshi.com/download/ds/cosland/2md1t1b4vs2qes.pdf")
+	(tags "Toggle Switch DPDT")
+	(property "Reference" "REF**"
+		(at -5.08 0 270)
+		(layer "F.SilkS")
+		(uuid "f6ee98b5-4773-4eeb-a825-33c1705abace")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "SW_SPDT_Toggle"
+		(at -0.214 3.302 0)
+		(layer "F.Fab")
+		(uuid "5994a946-119f-4db4-aafe-00ae73b5b800")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at -5.04 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "37f6bfd1-3525-4a3a-af4c-b64e415ef928")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at -5.04 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "4d379d8b-e579-4b11-982f-c880497f7dc8")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr through_hole)
+	(fp_line
+		(start 2.58 -1.016)
+		(end -2.5 -1.016)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "edc9ab4f-487a-48dc-95f2-4d87f0e9cf9e")
+	)
+	(fp_line
+		(start 2.58 1.016)
+		(end -2.5 1.016)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "2f215f15-3d52-4c91-93e6-3ea03a95622f")
+	)
+	(fp_rect
+		(start -3.81 -1.905)
+		(end 3.81 1.905)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(fill no)
+		(layer "F.CrtYd")
+		(uuid "21803051-fbfb-45c3-bfce-a85d9e43fb2a")
+	)
+	(fp_text user "${REFERENCE}"
+		(at 0 0.46 0)
+		(layer "F.Fab")
+		(uuid "be0953c0-632d-4dd2-85e9-4d41239f22d2")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(pad "1" thru_hole rect
+		(at -2.54 0)
+		(size 1.8 1.8)
+		(drill 0.9)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "c5a1761e-3391-4e74-90c9-947fd66e1fc6")
+	)
+	(pad "2" thru_hole circle
+		(at 0 0)
+		(size 1.8 1.8)
+		(drill 0.9)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "3dd05e0a-6fe4-4de6-81df-97b26be40fb4")
+	)
+	(pad "3" thru_hole circle
+		(at 2.54 0)
+		(size 1.8 1.8)
+		(drill 0.9)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "681bd495-c396-44ce-92bd-4b397cd48c04")
+	)
+	(embedded_fonts no)
+	(model "${KICAD6_3DMODEL_DIR}/Button_Switch_THT.3dshapes/SW_Push_2P2T_Toggle_CK_PVA2xxH1xxxxxxV2.wrl"
+		(offset
+			(xyz -2.5 2.54 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 0)
+		)
+	)
+)

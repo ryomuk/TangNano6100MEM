@@ -1,0 +1,17 @@
+Reference,Value,Qty
+C1,1uF,1
+"C2,C4,C5,C6",0.1uF,4
+C3,47uF,1
+J1,Conn_01x20 x 2,1
+"J2,J3,J4,J5",Conn_01x20,4
+J6,01x2,1
+J7,01x6,1
+LED1,low power LED,1
+"R1,R2,R4,R5,R7",10k,5
+R3,47k,1
+R6,1k,1
+SW1,toggle,1
+"SW2, SW3",tactile,1
+U1,IM6100,1
+"U2,U3,U4",SN74CB3T3245DW,3
+U5,WS2812B_6x10,1

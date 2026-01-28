@@ -1,0 +1,1011 @@
+;;;
+;;; Universal Monitor for IM6100
+;;;   Copyright (C) 2022  Haruo Asano
+;;;
+;;; modified by Ryo Mukai
+;;; to work in Control Panel memory space
+
+;;;  	INCLUDE	"../common.inc"
+ 	INCLUDE	"./common.inc"
+
+	CPU	6100
+
+	INCLUDE	"config.inc"
+
+	;; for indirect access in CP memory
+TAD_I_00017	MACRO
+	IF USE_CP
+	JMS TAD_I_17_PAGE0
+	ELSE
+	TAD I 00017
+	ENDIF
+	ENDM
+
+DCA_I_00017	MACRO
+	IF USE_CP
+	JMS DCA_I_17_PAGE0
+	ELSE
+	DCA I 00017
+	ENDIF
+	ENDM
+
+;;;
+;;; Zero Page
+;;;
+	IF (USE_TANGNANO & (USE_CP==0))
+	ORG     0
+	DC 0		; dummy zero to deduce from 0
+	ENDIF
+	IF USE_CP
+	ORG     0
+S_PC:		DC 0		; saved PC
+S_AC:		DS 1		; saved AC
+
+	ORG	ENTRY
+C_CSTART:	DC	CSTART
+C_WSTART:	DC 	WSTART
+C_CONOUT:	DC	CONOUT
+C_STROUT:	DC	STROUT
+C_CONIN:	DC	CONIN
+C_CONST:	DC	CONST
+		DC	0
+C_ERR:		DC	ERR
+C_SKIPSP:	DC	SKIPSP
+C_UPPER:	DC	UPPER
+C_RDOCT:	DC	RDOCT
+C_GETLIN:	DC	GETLIN
+C_OCTOUT4:	DC	OCTOUT4
+C_CRLF:		DC	CRLF
+C_SHOWPROG:     DC	SHOWPROG
+	ELSE ; not USE_CP
+	ORG	ENTRY
+C_CSTART:
+	DS	1
+C_WSTART:
+	DS	1
+C_CONOUT:
+	DS	1
+C_STROUT:
+	DS	1
+C_CONIN:
+	DS	1
+C_CONST:
+	DS	1
+	DS	1
+C_ERR:
+	DS	1
+C_SKIPSP:
+	DS	1
+C_UPPER:
+	DS	1
+C_RDOCT:
+	DS	1
+C_GETLIN:
+	DS	1
+C_OCTOUT4:
+	DS	1
+C_CRLF:
+	DS	1
+	IF USE_TANGNANO
+C_SHOWPROG:
+	DS	1
+	ENDIF
+	ENDIF ; USE_CP
+;;;
+;;;
+;;;
+
+	ORG	PROG_B
+
+	IF USE_CP
+	;;
+CSTART:
+	ELSE ; not USE_CP
+	;; 
+ENTTAB:
+	DC	CSTART
+	DC	WSTART
+	DC	CONOUT
+	DC	STROUT
+	DC	CONIN
+	DC	CONST
+	DC	0
+	DC	ERR
+	DC	SKIPSP
+	DC	UPPER
+	DC	RDOCT
+	DC	GETLIN
+	DC	OCTOUT4
+	DC	CRLF
+	IF USE_TANGNANO
+	DC	SHOWPROG
+	ENDIF
+ENTTAB_E:
+
+CSTART:
+	;; Copy entry point table to ZERO page
+	CLA
+	TAD	L ENTTAB-1
+	DCA	00016
+	TAD	L ENTRY-1
+	DCA	00017
+	TAD	L -(ENTTAB_E-ENTTAB)
+	DCA	CNT
+INI0:
+	TAD	I 00016
+	DCA	I 00017
+	ISZ	CNT
+	JMP	INI0
+	;; 
+	ENDIF ; USE_CP
+	
+	JMS	IL INIT
+
+	CLA
+	TAD	L 00000
+	DCA	DSADDR
+	TAD	L 00000
+	DCA	SADDR
+	TAD	L 00000
+	DCA	GADDR
+
+	TAD	L OPNMSG-1
+	DCA	00017
+	JMS	I C_STROUT
+
+	IF USE_CP
+	;; 	print saved PC
+	CLA
+	TAD	S_PC
+	DCA	VAL
+	JMS	I C_OCTOUT4
+	JMS	I C_CRLF
+	;; 
+	ENDIF
+
+WSTART:
+	CLA
+	TAD	L PROMPT-1
+	DCA	00017
+	JMS	I C_STROUT
+	JMS	I C_GETLIN
+	CLA
+	TAD	L INBUF-1
+	DCA	00017
+	JMS	I C_SKIPSP
+	JMS	I C_UPPER
+	CLA
+	TAD	CH
+	SNA
+	JMP	WSTART
+
+	TAD	L -'D'
+	SNA
+	JMP	IL DUMP
+	TAD	L 'D'-'G'
+	SNA
+	JMP	IL GO
+	TAD	L 'G'-'S'
+	SNA
+	JMP	IL SETM
+
+	IF USE_HEXCMD
+	TAD	L 'S'-'L'
+	SNA
+	JMP	IL LOADH
+	ENDIF
+
+ERR:
+	CLA
+	TAD	L ERRMSG-1
+	DCA	00017
+	JMS	I C_STROUT
+	JMP	WSTART
+
+	LTORG
+
+;;; Dump memory
+
+	ALIGN	128
+
+DUMP:
+	ISZ	00017		; Inc 00017 (never skip)
+	JMS	I C_SKIPSP
+	JMS	I C_RDOCT
+	CLA
+	TAD	CNT
+	SZA
+	JMP	DP0
+	;; No arg.
+	JMS	I C_SKIPSP
+	CLA
+	TAD	CH
+	SZA
+	JMP	I C_ERR
+	TAD	DSADDR
+	TAD	L 64
+	DCA	DEADDR
+	JMP	DPM
+
+	;; 1st arg. found
+DP0:
+	CLA
+	TAD	VAL
+	DCA	DSADDR
+	JMS	I C_SKIPSP
+	CLA
+	TAD	CH
+	TAD	L -','
+	SNA
+	JMP	DP1
+	TAD	L ','
+	SZA
+	JMP	I C_ERR
+	;; No 2nd arg.
+	CLA
+	TAD	DSADDR
+	TAD	L 64
+	DCA	DEADDR
+	JMP	DPM
+DP1:
+	ISZ	00017		; Inc 00017 (never skip)
+	JMS	I C_SKIPSP
+	JMS	I C_RDOCT
+	JMS	I C_SKIPSP
+	CLA
+	TAD	CNT
+	SNA
+	JMP	I C_ERR
+	CLA
+	TAD	CH
+	SZA
+	JMP	I C_ERR
+	IAC
+	TAD	VAL
+	DCA	DEADDR
+
+DPM:
+	CLA
+	TAD	DSADDR
+	AND	L 07770
+	TAD	L -1
+	DCA	00016
+	DCA	FLAG		; Clear DSTATE (FLAG)
+DPM0:
+	JMS	DPL
+	JMS	I C_CONST
+	CLA
+	TAD	CH
+	SZA
+	JMP	DPM1
+	TAD	FLAG
+	TAD	L -2
+	SPA
+	JMP	DPM0
+	CLA
+	TAD	DEADDR
+	DCA	DSADDR
+	JMP	I C_WSTART
+DPM1:
+	CLA
+	TAD	00016
+	DCA	DSADDR
+	JMS	I C_CONIN
+	JMP	I C_WSTART
+
+DPL:
+	DC	0
+	;; DUMP line
+	CLA
+	TAD	00016
+	IAC
+	DCA	VAL
+	JMS	I C_OCTOUT4
+	TAD	L DSEP0-1
+	DCA	00017
+	JMS	I C_STROUT
+	CLA
+	TAD	L -8
+	DCA	CNT
+DPL0:
+	JMS	IL DPB
+	ISZ	CNT
+	JMP	DPL0
+	JMS	I C_CRLF
+	JMP	I DPL
+
+	LTORG
+
+	ALIGN	128
+
+DPB:
+	DC	0
+	;; DUMP byte
+	CLA
+	TAD	L ' '
+	DCA	CH
+	JMS	I C_CONOUT
+	CLA
+	TAD	FLAG
+	SZA
+	JMP	DPB2
+	;; Dump state 0
+	TAD	00016		; AC = addr - 1
+	CMA			; AC = - (addr - 1) - 1 = - addr
+	TAD	DSADDR
+	SNA
+	JMP	DPB1
+DPB0:
+	;; Still 0 or 2
+	CLA
+	TAD	L DSEP2-1
+	DCA	00017
+	JMS	I C_STROUT
+	CLA
+	TAD	00016
+	IAC			; Inc 00016 (Don't want to access memory)
+	DCA	00016
+	JMP	I DPB
+DPB1:
+	;; Found start address
+	ISZ	FLAG		; never skip
+DPB2:
+	CLA CMA
+	TAD	FLAG
+	SZA
+	JMP	DPB0		; State 2
+	;; Dump state 1
+	CLA
+	TAD	I 00016		; OK. This is Main Memory
+	DCA	VAL
+	JMS	I C_OCTOUT4
+	TAD	00016		; AC = addr - 1
+	CMA			; AC = - (addr - 1) - 1 = - addr
+	TAD	DEADDR
+	SNA
+	ISZ	FLAG		; Found end address (never skip)
+	JMP	I DPB
+
+;;; GO address
+
+GO:
+	ISZ	00017		; Inc 00017 (never skip)
+	JMS	I C_SKIPSP
+	JMS	I C_RDOCT
+	JMS	I C_SKIPSP
+	CLA
+	TAD	CH
+	SZA
+	JMP	I C_ERR
+	TAD	CNT
+	SNA
+	JMP	G1
+	CLA
+	TAD	VAL
+
+	IF USE_CP
+	;; 
+	DCA	S_PC		; overwrite saved PC
+G1:
+	ION			; exit CP
+	JMP	I S_PC
+	;; 
+	ELSE ; not USE_CP
+	DCA	GADDR
+G1:
+	JMP	I GADDR
+	ENDIF ; USE_CP
+
+;;; SET memory
+
+SETM:
+	ISZ	00017		; Inc 00017 (never skip)
+	JMS	I C_SKIPSP
+	JMS	I C_RDOCT
+	JMS	I C_SKIPSP
+	CLA
+	TAD	CH
+	SZA
+	JMP	I C_ERR
+	TAD	CNT
+	SNA
+	JMP	SM0
+	CLA
+	TAD	VAL
+	DCA	SADDR
+SM0:
+SM1:
+	CLA
+	TAD	SADDR
+	DCA	VAL
+	JMS	I C_OCTOUT4
+	CLA
+	TAD	L DSEP1-1
+	DCA	00017
+	JMS	I C_STROUT
+	CLA
+	TAD	I SADDR		; OK. This is Main Memory
+	DCA	VAL
+	JMS	I C_OCTOUT4
+	CLA
+	TAD	L ' '
+	DCA	CH
+	JMS	I C_CONOUT
+	JMS	I C_GETLIN
+	CLA
+	TAD	L INBUF-1
+	DCA	00017
+	JMS	I C_SKIPSP
+	CLA
+	TAD	CH
+	SZA
+	JMP	SM2
+	;; Empty (Increment address)
+	ISZ	SADDR
+	NOP
+	JMP	SM1
+SM2:
+	TAD	L -'-'
+	SZA
+	JMP	SM3
+	;; '-' (Decrement address)
+	CLA CMA
+	TAD	SADDR
+	DCA	SADDR
+	JMP	SM1
+SM3:
+	TAD	L '-'-'.'
+	SZA
+	JMP	SM4
+	;; '.' (Quit)
+	JMP	I C_WSTART
+SM4:
+	JMS	I C_RDOCT
+	CLA
+	TAD	CNT
+	SNA
+	JMP	I C_ERR
+	CLA
+	TAD	VAL
+	DCA	I SADDR		; OK. This is Main Memory
+	ISZ	SADDR
+	NOP
+	JMP	SM1
+
+	LTORG
+
+	IF USE_HEXCMD
+
+	ALIGN	128
+
+HEXIN:
+	DC	0
+	CLA
+	DCA	VAL
+	JMS	HI0
+	CLA
+	TAD	VAL
+	CLL RTL
+	CLL RTL
+	DCA	VAL
+	JMS	HI0
+	JMP	I HEXIN
+
+HI0:
+	DC	0
+	JMS	I C_CONIN
+	JMS	I C_UPPER
+	CLA
+	TAD	CH
+	TAD	L -'0'
+	SPA
+	JMP	HIR
+	TAD	L '0'-'9'-1
+	SPA
+	JMP	HI1
+	TAD	L '9'+1-'A'
+	SPA
+	JMP	HIR
+	TAD	L 'A'-'F'-1
+	SMA
+	JMP	HIR
+	CLA
+	TAD	CH
+	TAD	L 10-'A'
+	JMP	HI2
+HI1:
+	CLA
+	TAD	CH
+	TAD	L -'0'
+HI2:
+	TAD	VAL
+	DCA	VAL
+HIR:
+	JMP	I HI0
+
+	LTORG
+
+	ALIGN	128
+
+LOADH:	
+	ISZ	00017		; Inc 00017 (never skip)
+	JMS	I C_SKIPSP
+	JMS	I C_RDOCT
+	JMS	I C_SKIPSP
+	CLA
+	TAD	CH
+	SZA
+	JMP	I C_ERR
+	CLA CMA
+	TAD	VAL
+	DCA	00016		; Offset-1
+LH0:
+	JMS	I C_CONIN
+	JMS	I C_UPPER
+	CLA
+	TAD	CH
+	TAD	L -':'
+	SNA
+	JMP	LHI0
+
+LH2:
+	;; Skip to EOL
+	CLA
+	TAD	CH
+	TAD	L -CR
+	SNA
+	JMP	LH0
+	TAD	L CR-LF
+	SNA
+	JMP	LH0
+LH3:
+	JMS	I C_CONIN
+	JMP	LH2
+
+LHI0:
+	JMS	IL HEXIN
+	CLA
+	TAD	VAL
+	DCA	SUM
+	TAD	VAL
+	CLL RAR
+	SZL
+	JMP	LHIE		; Odd length error
+	CMA IAC
+	DCA	CNT
+
+	JMS	IL HEXIN
+	CLA
+	TAD	VAL
+	TAD	SUM
+	DCA	SUM
+	TAD	VAL
+	BSW
+	CLL RAL
+	AND	L 0xf00
+	DCA	00017		; Address H
+
+	JMS	IL HEXIN
+	CLA
+	TAD	VAL
+	TAD	SUM
+	DCA	SUM
+	TAD	VAL
+	CLL RAR
+	SZL
+	JMP	I C_ERR		; Odd address error
+	TAD	00017
+
+	TAD	00016		; Add offset
+	DCA	00017
+
+	JMS	IL HEXIN
+	CLA
+	TAD	VAL
+	TAD	SUM
+	DCA	SUM
+	CMA
+	TAD	VAL
+	SNA
+	JMP	LHI00
+	IAC
+	SNA
+	JMP	LHI00
+	JMP	LH3		; Skip unsupported record type
+LHI00:
+	TAD	VAL
+	DCA	FLAG		; RECTYP
+	TAD	CNT
+	SNA
+	JMP	LHI3		; length == 0
+LHI1:
+	JMS	IL HEXIN
+	CLA
+	TAD	VAL
+	TAD	SUM
+	DCA	SUM
+	TAD	VAL
+	BSW
+	RTL
+	AND	L 0xf00
+	DCA	INBUF		; Save upper 4 bit temporary
+
+	JMS	IL HEXIN
+	CLA
+	TAD	VAL
+	TAD	SUM
+	DCA	SUM
+
+	TAD	FLAG
+	SZA
+	JMP	LHI2
+
+	TAD	VAL
+	TAD	INBUF
+	DCA	I 00017		; This (00017) is main memory
+LHI2:
+	ISZ	CNT
+	JMP	LHI1
+LHI3:
+	JMS	IL HEXIN
+	CLA
+	TAD	VAL
+	TAD	SUM
+	AND	L 0377
+	SZA
+	JMP	LHIE		; Checksum error
+
+	IF USE_TANGNANO
+	JMS	I C_SHOWPROG	; show progress
+	ENDIF
+
+	CLA CMA
+	TAD	FLAG
+	SZA
+	JMP	LH3
+	JMP	I C_WSTART
+LHIE:
+	CLA
+	TAD	L IHEMSG-1
+	DCA	00017
+	JMS	I C_STROUT
+	JMP	I C_WSTART
+
+	LTORG
+
+	ENDIF
+
+;;; Other support routines
+	ALIGN	128
+
+	IF USE_CP		
+	;; STROUT is moved to another page if use CP
+	ELSE 
+	;; not USE_CP
+STROUT:
+	DC	0
+	CLA
+STRO0:
+	TAD	I 00017
+	SNA
+	JMP	I STROUT	; Return
+	DCA	CH
+	JMS	I C_CONOUT
+	JMP	STRO0
+	;; 
+	ENDIF
+
+OCTOUT2:
+	DC	0
+	CLA
+	TAD	VAL
+	RAR
+	RTR
+	AND	L 00007
+	TAD	L '0'
+	DCA	CH
+	JMS	I C_CONOUT
+	CLA
+	TAD	VAL
+	AND	L 00007
+	TAD	L '0'
+	DCA	CH
+	JMS	I C_CONOUT
+	JMP	I OCTOUT2
+OCTOUT4:
+	DC	0
+	CLA
+	TAD	VAL
+	BSW
+	DCA	VAL
+	JMS	OCTOUT2
+	CLA
+	TAD	VAL
+	BSW
+	DCA	VAL
+	JMS	OCTOUT2
+	JMP	I OCTOUT4
+
+CRLF:
+	DC	0
+	CLA
+	TAD	L CR
+	DCA	CH
+	JMS	I C_CONOUT
+	CLA
+	TAD	L LF
+	DCA	CH
+	JMS	I C_CONOUT
+	JMP	I CRLF
+
+GETLIN:
+	DC	0
+	CLA
+	DCA	CNT
+	TAD	L INBUF-1
+	DCA	00017
+GL0:
+	JMS	I C_CONIN
+	CLA
+	TAD	CH
+	TAD	L -CR
+	SNA
+	JMP	GLE
+	TAD	L CR-LF
+	SNA
+	JMP	GLE
+	TAD	L LF-BS
+	SNA
+	JMP	GLB
+	TAD	L BS-DEL
+	SNA
+	JMP	GLB
+	TAD	L DEL-' '
+	SPA
+	JMP	GL0
+	TAD	L ' '-0x80
+	SMA
+	JMP	GL0
+	CLA
+	TAD	CNT
+	TAD	L -BUFLEN+1
+	SMA
+	JMP	GL0
+	CLA
+	TAD	CH
+	DCA_I_00017
+	TAD	CH
+	JMS	I C_CONOUT
+	ISZ	CNT
+	NOP
+	JMP	GL0
+GLB:
+	CLA
+	TAD	CNT
+	SNA
+	JMP	GL0
+	CLA CMA
+	TAD	CNT
+	DCA	CNT
+	CLA CMA
+	TAD	00017
+	DCA	00017
+	TAD	L BS
+	DCA	CH
+	JMS	I C_CONOUT
+	CLA
+	TAD	L ' '
+	DCA	CH
+	JMS	I C_CONOUT
+	CLA
+	TAD	L BS
+	DCA	CH
+	JMS	I C_CONOUT
+	JMP	GL0
+GLE:	
+	JMS	CRLF
+	CLA
+	DCA_I_00017
+	JMP	I GETLIN
+
+	LTORG
+	ALIGN	128
+
+SKIPSP:
+	DC	0
+SS0:
+	CLA
+	TAD_I_00017
+	DCA	CH
+	TAD	CH
+	TAD	L -' '
+	SNA
+	JMP	SS0
+	CLA CMA			; AC=-1
+	TAD	00017
+	DCA	00017
+	JMP	I SKIPSP
+
+UPPER:
+	DC	0
+	CLA
+	TAD	CH
+	TAD	L -'a'
+	SPA
+	JMP	I UPPER		; CH < 'a'
+	CLA
+	TAD	CH
+	TAD	L -'z'
+	SMA SZA
+	JMP	I UPPER		; CH > 'z'
+	TAD	L 'Z'
+	DCA	CH
+	JMP	I UPPER
+
+RDOCT:
+	DC	0
+	CLA
+	DCA	CNT
+	DCA	VAL
+RO0:
+	CLA
+	TAD_I_00017
+	DCA	CH
+	JMS	UPPER
+	CLA
+	TAD	CH
+	TAD	L -'9'
+	SMA SZA
+	JMP	ROE		; CH > '9'
+	CLA
+	TAD	CH
+	TAD	L -'0'
+	SPA
+	JMP	ROE		; CH < '0'
+	AND	L 00007
+	DCA	CH
+	TAD	VAL
+	RAL
+	RTL
+	AND	L 07770
+	TAD	CH
+	DCA	VAL
+	ISZ	CNT
+	NOP
+	JMP	RO0
+ROE:
+	CLA CMA
+	TAD	00017
+	DCA	00017
+	JMP	I RDOCT
+
+	LTORG
+
+	IF USE_CP		
+	;; STROUT and string data shold be in the same page
+	;; for pseudo indirect addressing on CP Memory
+	ALIGN	128
+STROUT:	
+	DC	0
+	CLA
+STRO0:
+;;;  	TAD	I 00017 (for non zero local page)
+	;; modified for CP 
+ 	TAD	I 00017		; just for increment pointer
+	CLA
+ 	TAD	00017		; read the pointer
+	AND     L 00177  	; make local address
+	TAD	L 01200		; make a local read instruction
+	DCA     .+1		; deposit the instruction 'TAD'
+	NOP			; here is the instruction
+	;; 
+	SNA
+	JMP	I STROUT	; Return
+	DCA	CH
+	JMS	I C_CONOUT
+	JMP	STRO0
+	ENDIF ; USE_CP
+
+	IF USE_TANGNANO 	; show progress
+SHOWPROG:
+	DC	0
+	CLA
+	TAD	00017
+	DCA	VAL
+	JMS	I C_OCTOUT4
+	JMS	I C_CRLF
+	JMP	I SHOWPROG	; Return
+	;; 
+	ENDIF
+	
+OPNMSG:
+	IF USE_CP
+        DC      CR LF "Universal Monitor IM6100 (Control Panel)" CR LF 0
+	ELSE
+        DC      CR LF "Universal Monitor IM6100" CR LF 0
+	ENDIF
+
+PROMPT:
+	DC	"] " 0
+IHEMSG:
+	DC	"Error ihex" CR LF 0
+ERRMSG:
+	DC	"Error" CR LF 0
+DSEP0:
+	DC	" :" 0
+DSEP1:
+	DC	" : " 0
+DSEP2:
+	DC	"    " 0
+	
+	IF USE_CP
+	LTORG
+	ENDIF
+	
+	ALIGN	128
+
+	IF USE_DEV_EMILY
+	INCLUDE	"dev/dev_emily.asm"
+	ENDIF
+
+	IF USE_TANGNANO
+	INCLUDE	"dev/dev_tangnano.asm"
+	ENDIF
+
+	;;
+	;; Reset entry point
+	;;
+
+	ORG	07776
+
+	DC	CSTART
+	JMP	I .-1
+
+	;;
+	;; Work Area
+	;;
+
+	ORG	WORK_B
+
+INBUF:	DS	16
+DSADDR:	DS	1
+DEADDR:	DS	1
+SADDR:	DS	1
+GADDR:	DS	1
+
+CH:	DS	1
+CNT:	DS	1
+VAL:	DS	1
+FLAG:	DS	1
+SUM:	DS	1
+
+	IF USE_CP
+	;; following routines should be in Page 0
+TAD_I_17_PAGE0:
+	;; emulate TAD I 00017 (pointer points zeropage)
+	DC	0
+	TAD	I 00017	; just for increment pointer
+	CLA
+	TAD	00017	; read the pointer (zero page)
+	TAD	L 01000	; make a read instruction 'TAD'
+	DCA	.+1	; deposit the instruction
+	NOP		; here is the instruction
+	JMP	I TAD_I_17_PAGE0
+	
+DCA_I_17_PAGE0:
+	;; emulate DCA I 00017 (pointer points zeropage)
+	DC	0
+	MQL		; save AC to MQ
+	TAD	I 00017	; just for increment pointer
+	CLA
+	TAD	00017	; read the pointer (zero page)
+	TAD	L 03000	; make a read instruction 'DCA'
+	DCA	.+2	; deposit the instruction
+	MQA		; restore AC from MQ
+	NOP		; here is the instruction
+	JMP	I DCA_I_17_PAGE0
+	
+	LTORG
+	ENDIF
+	
+	END

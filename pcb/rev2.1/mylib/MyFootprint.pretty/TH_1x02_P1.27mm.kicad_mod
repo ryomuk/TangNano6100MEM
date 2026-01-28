@@ -1,0 +1,123 @@
+(footprint "TH_1x02_P1.27mm"
+	(version 20241229)
+	(generator "pcbnew")
+	(generator_version "9.0")
+	(layer "F.Cu")
+	(descr "Through hole straight pin header, 1x02, 1.27mm pitch, single row")
+	(tags "Through hole pin header THT 1x02 1.27mm single row")
+	(property "Reference" "REF**"
+		(at 0 -1.745 0)
+		(layer "F.Fab")
+		(uuid "86bfce41-41f1-4c1e-8508-947e72d93685")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "TH_1x02_P1.27mm"
+		(at 0 3.015 0)
+		(layer "F.Fab")
+		(uuid "92fb9ac3-1fa5-44fb-8204-834e00a1d24e")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "f4ee7ce2-d958-488e-ab2e-e01adac56ca8")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "1e2a884a-bcd2-4cbc-a4b5-002581ed871a")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr through_hole)
+	(fp_line
+		(start -0.635 -0.635)
+		(end -0.635 1.905)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "56b0aeab-c6ef-42d6-8b5f-3cc4b62a09fb")
+	)
+	(fp_line
+		(start -0.635 1.905)
+		(end 0.635 1.905)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "1d441d89-0b37-4957-89b6-8817df409cff")
+	)
+	(fp_line
+		(start 0.635 -0.635)
+		(end -0.635 -0.635)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "2549e1d1-fda9-422e-ae45-11b17ba088a1")
+	)
+	(fp_line
+		(start 0.635 1.905)
+		(end 0.635 -0.635)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "ca771ec2-81aa-432a-b991-8d4e1b6f1bb3")
+	)
+	(fp_text user "${REFERENCE}"
+		(at 0 0.635 90)
+		(layer "F.Fab")
+		(uuid "9d82f2af-263c-47d3-b6c9-3259c9550341")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(pad "1" thru_hole circle
+		(at 0 0)
+		(size 1 1)
+		(drill 0.65)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "bb69bd96-1318-4f5c-95e6-b35950601d14")
+	)
+	(pad "2" thru_hole circle
+		(at 0 1.27)
+		(size 1 1)
+		(drill 0.65)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "0f2d2b09-6198-4431-a2bf-2c83d4047525")
+	)
+	(embedded_fonts no)
+)
