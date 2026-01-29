@@ -3,9 +3,9 @@
 - 5V電源の供給，端末ソフトとの通信に使用
 
 ## Tang Nanoのスイッチ
-- S1: ディスクイメージの選択に使用．(top.vの USER_drivesel 参照．)
-- S2: 現在未使用．
-- S1, S2の同時押しでCPUをRESET (top.vの reset_sw)
+- SW1: ディスクイメージの選択に使用．(top.vの USER_drivesel 参照．)
+- SW2: dbg_modeのトグル．([07_debugtool.md](./07_debugtool.md)参照
+- SW1, SW2の同時押しでCPUをRESET (top.vの reset_sw)
 これらのスイッチの用途は今後変更する可能性が高いです．
 
 ## 基板のスイッチと端子
