@@ -43,7 +43,6 @@
 ## 開発環境関連
 - [SimH (History Simulator)](http://simh.trailing-edge.com/)
 - [Raymii.org: Running Adventure on the DEC PDP-8 with SIMH](https://raymii.org/s/articles/Running_ADVENT-on-the-PDP-8-with-SIMH.html)
-  - simhを使ったRK05イメージファイルの作り方あり
 - [Universal Monitor](https://electrelic.com/electrelic/node/1317)
 - [Macro Assembler AS](http://john.ccac.rwth-aachen.de:8000/as/)
 
