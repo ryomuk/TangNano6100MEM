@@ -2,7 +2,7 @@
 // TangNano6100MEM
 // Memory System and Peripherals for IM6100 using Tang Nano 20K
 //
-// version 20260128
+// version 20260129
 //
 // by Ryo Mukai
 //
@@ -18,6 +18,8 @@
 //                   - 6x10 matrix LED
 //                   - debug log UART (disk access, etc.)
 //                 - Universal Monitor on CP Memory
+// 2026/01/29: - bug fixed (done flag of RK status register)
+//             - dbg_mode (slow clock and full instruction log) implemented
 //---------------------------------------------------------------------------
 
 `define USE_DBGLOG   // output debug information to DBG_TX
@@ -82,15 +84,12 @@ module top
   parameter CPU_CLK_RATIO =  6;   // 4.5 MHz (IM6100A safe driving @5V)
 //  parameter CPU_CLK_RATIO =  8;   // 3.375MHz
 //  parameter CPU_CLK_RATIO =  9;   // 3.0MHz  (IM6100-1 @5V)
-//  parameter CPU_CLK_RATIO = 10;   // 2.7 MHz
 //  parameter CPU_CLK_RATIO = 11;   // 2.45MHz (IM6100 @5V)
 //  parameter CPU_CLK_RATIO = 27;   // 1.0 MHz
-//  parameter CPU_CLK_RATIO =270;   //  100KHz
 
   // for debug with full instruction trace log
-//  parameter CPU_CLK_RATIO = 27000; // 1KHz
-//  parameter CPU_CLK_RATIO =270000; // 100Hz
-
+  parameter DBG_CLK_RATIO = 27000; // 1KHz
+  
   parameter CPU_CLK_FRQ = SYS_CLK_FRQ / CPU_CLK_RATIO;
 
     parameter	 UART_BPS    =     115200; //Hz
@@ -180,12 +179,12 @@ module top
 //      &  _~~~~~_____~~~~~____
 //---------------------------------------------------------------------------
 //  if(CPU_CLK_RATIO % 2 == 0)
-    assign CLK = CLK_div;
+  assign CLK = dbg_mode ? DBG_CLK_div : CLK_div;
 //  else
 //    assign CLK = CLK_div & CLK_div_delayed;
 
   reg [23:0] clk_cnt = 0; // wide counter for very slow clock
-  reg	     CLK_div = 0;
+  reg	     CLK_div;
   always @(posedge sys_clk)
     if(clk_cnt == CPU_CLK_RATIO - 1)
       clk_cnt <= 0;
@@ -202,6 +201,17 @@ module top
   always @(negedge sys_clk)
       CLK_div_delayed <= CLK_div;
 
+
+  reg [23:0] DBG_clk_cnt = 0;
+  reg	     DBG_CLK_div = 0; // very slow clock
+  always @(posedge sys_clk)
+    if(DBG_clk_cnt == (DBG_CLK_RATIO / 2) - 1) begin
+       DBG_clk_cnt <= 0;
+       DBG_CLK_div <= ~DBG_CLK_div;
+    end
+    else
+      DBG_clk_cnt <= DBG_clk_cnt + 1'b1;
+  
 //---------------------------------------------------------------------------
 // make logical switches from sw1
 //---------------------------------------------------------------------------
@@ -228,6 +238,7 @@ module top
   wire       sw2_hold;
   wire       sw2_double;
   wire       sw2_toggle;
+  wire       sw2_posedge;
   wire [2:0] sw2_count;
   switch
     #(.CLK_FRQ(SYS_CLK_FRQ)
@@ -241,7 +252,8 @@ module top
        .sw_toggle  (sw2_toggle),
        .sw_count   (sw2_count),
        .reset_count(sw2_hold),
-       .sw_repeat(),.sw_posedge(),.sw_negedge()
+       .sw_posedge (sw2_posedge),
+       .sw_repeat(),.sw_negedge()
        );
 
 //---------------------------------------------------------------------------
@@ -358,8 +370,12 @@ module top
 //---------------------------------------------------------------------------
 // last instruction log
 //---------------------------------------------------------------------------
+  parameter INST_SPACE_MAIN = 1'b0;
+  parameter INST_SPACE_CP   = 1'b1;
+    
   reg [14:0]	 last_inst_addr;
   reg [11:0]	 last_inst;
+  reg		 last_inst_space;
   wire [2:0]	 last_op = last_inst[11:9]; // used for memory extention
 
   reg [14:0]	 last_read_addr;
@@ -373,6 +389,7 @@ module top
        {last_inst_addr, last_inst} <= {ext_address, d_mem_to_cpu};
        {last_read_addr, last_read_data} <= 0;
        {last_write_addr, last_write_data} <= 0;
+       last_inst_space <= INST_SPACE_MAIN;
     end
     else if( mem_read )
       {last_read_addr, last_read_data} <= {ext_address, d_mem_to_cpu};
@@ -386,6 +403,7 @@ module top
        {last_inst_addr, last_inst} <= {ext_address, mem_cp[address]};
        {last_read_addr, last_read_data} <= 0;
        {last_write_addr, last_write_data} <= 0;
+       last_inst_space <= INST_SPACE_CP;
     end
     else if( mem_cp_read )
       {last_read_addr, last_read_data} <= {ext_address, mem_cp[address]};
@@ -599,7 +617,7 @@ module top
 	IOT_RIF:  c01s_n <= {H, L, H};
 	IOT_RIB:  c01s_n <= {H, L, H};
 	// RK disk
-	IOT_DSKP: c01s_n <= {H, H, RK_BUSY}; // = ~RK_DONE
+	IOT_DSKP: c01s_n <= {H, H, ~RK_DONE};
 	IOT_DCLR: c01s_n <= {L, H, H};
 	IOT_DLCA: c01s_n <= {L, H, H};
 	IOT_DRST: c01s_n <= {L, L, H};
@@ -701,7 +719,8 @@ module top
   reg	      REG_DMAREQ;
   assign DMAREQ_n = ~REG_DMAREQ;
   wire	      RK_BUSY = REG_DMAREQ;
-
+  wire	      RK_DONE = ~RK_BUSY;
+  
   always @(posedge sys_clk or negedge RESET_n)
     if( ~RESET_n )
       REG_DMAREQ <= 0;
@@ -846,8 +865,8 @@ module top
      (address == IOT_RDF)  ? {6'b000_000, REG_DF, 3'b000} :
      (address == IOT_RIF)  ? {6'b000_000, REG_IF, 3'b000} :
      (address == IOT_RIB)  ? {6'b000_000, REG_SF[5:0]} :
-     // RK disk
-     (address == IOT_DRST) ? {RK_BUSY, 11'b00_000_000_000}:
+     // RK disk Status Register (Error flag is not implemented)
+     (address == IOT_DRST) ? {RK_DONE, 11'b00_000_000_000}:
      0;
   
 //---------------------------------------------------------------------------
@@ -881,7 +900,7 @@ module top
   always @(negedge sys_clk or negedge RESET_n)
     if( ~RESET_n )
       TTY_INT_enable <= 0;
-    else if (last_inst == IOT_ION )
+    else if ((last_inst == IOT_ION) & (last_inst_space == INST_SPACE_MAIN))
       TTY_INT_enable <= 1'b1;
 
 //  assign INTREQ_n = 1'b1;
@@ -1062,13 +1081,20 @@ module top
 // Halt signal for debug
 //---------------------------------------------------------------------
   reg dbg_hlt;
+  reg dbg_mode = 0;
   always @(posedge sys_clk or negedge RESET_n)
     if( ~RESET_n )
       dbg_hlt = 0;
+    else if(sw2_posedge)
+      dbg_mode <= ~dbg_mode;
+//    else if((last_inst_addr == 15'o06722)
 //    else if((last_inst_addr == 15'o07671)
-//	    & ((dma_start_address>>1) == 15'o06600)
-//	    & (disk_block_address == 'o20)
-//	    ) // DIR RKA0:
+//	    & ((dma_start_address>>1) == 15'o07200)
+//	    & (disk_block_address == 'o21) // DIR SYS:
+//	    & ((dma_start_address>>1) == 15'o03600)
+//	    & (disk_block_address == 'o0001) // DIR RKA0:
+//	    ) 
+//      dbg_mode <= 1'b1;
 //      dbg_hlt <= 1'b1;
 //    else if((last_inst_addr == 15'o07671)
 //	    & ((dma_start_address >>1) == 15'o07000) // OS/8 PFOCAL
@@ -1204,6 +1230,7 @@ module top
 	   12'o7402: opname = "HLT  ";
 	   12'o7404: opname = "OSR  ";
 	   12'o7410: opname = "SKP  ";
+	   12'o7420: opname = "SNL  ";
 	   12'o7440: opname = "SZA  ";
 	   12'o7450: opname = "SNA  ";
 	   12'o7500: opname = "SMA  ";
@@ -1239,8 +1266,8 @@ module top
   endfunction
   
   wire trg_log_inst = posedge_RUN_HLT_n 
-       | (inst_read & (CPU_CLK_FRQ <= 1000));
-//       | (inst_cp_read & (CPU_CLK_FRQ <= 1000));  // for debug CP monitor
+       | (dbg_mode & (inst_read | inst_cp_read));
+
   wire trg_log_disk = disk_read | disk_write;
   always @(posedge sys_clk or negedge RESET_n)
     if( ~RESET_n ) begin
