@@ -76,7 +76,7 @@ This document is written mostly in Japanese, so please use machine translation i
 - ステップ実行後に戻ってくるとおかしくなることがある．
 - OS/8版のFOCALが動かない．おそらく割り込み関連の問題．
 - ~~OS/8でDIR SYS: はできるが DIR RKA0: は止まる．~~ PDP/8ハンドブックの誤植が原因でした．RK_DONEフラグを修正したら動くようになりました．
-- ~~OS/8 BASICでSNOOPY.BAが動かない．~~ 動きました．
+- ~~OS/8 BASICでSTRTRK.BAやSNOOPY.BAが動かない．~~ 動きました．
 
 ### 今後の予定，ToDo
 - いろいろ動かないところのデバッグ．
