@@ -117,7 +117,7 @@ HELLO FOCAL!
 - 開始アドレス=3000 (自動実行)
 - 自動実行なので，Self-Starting Binary Loader を試してみました．
   - https://deramp.com/downloads/mfe_archive/011-Digital%20Equipment%20Corporation/01%20DEC%20PDP-8%20Family%20Software/02%20Paper%20Tape%20Utilities/DEC-8E-XBINA%20Binary%20Loader/
-  - DEC_8E_XBINA_A_PB.BIN
+  - ファイル名: DEC_8E_XBINA_A_PB.BIN
 
 ```
 # G7756でRIM Loaderを起動してSS Bin Loaderを読む．
