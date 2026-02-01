@@ -42,6 +42,7 @@ READY.
 - ファイル名: BASIC8.BN
 - 上記リンクにソースとマニュアルもあり．
 - binary loaderでロード
+- 開始アドレス=1000
 ```
 Universal Monitor IM6100 (Control Panel)
 7777
@@ -113,7 +114,7 @@ HELLO FOCAL!
 ### LISP
 - http://www.bitsavers.org/bits/DEC/pdp8/papertapeImages/set1/
 - ファイル名: DECUS_8_102A_LISP.BIN
-- 先頭アドレス 3000
+- 開始アドレス=3000 (自動実行)
 - 自動実行なので，Self-Starting Binary Loader を試してみました．
   - https://deramp.com/downloads/mfe_archive/011-Digital%20Equipment%20Corporation/01%20DEC%20PDP-8%20Family%20Software/02%20Paper%20Tape%20Utilities/DEC-8E-XBINA%20Binary%20Loader/
   - DEC_8E_XBINA_A_PB.BIN
