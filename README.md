@@ -69,7 +69,6 @@ This document is written mostly in Japanese, so please use machine translation i
 以下，雑多な情報です．
 
 ### 動作状況
-- まだかなりいろいろ怪しいです．
 - 紙テープソフトやOS/8およびOS/8上で動く言語処理系などがある程度動作します．
 - OS/8のBASICで簡単なプログラムを入力したりセーブ/ロードしたりできます．
   - STRTRK.BAやSNOOPY.BAが動きました．
@@ -83,10 +82,9 @@ This document is written mostly in Japanese, so please use machine translation i
 
 ### 今後の予定，ToDo
 - いろいろ動かないところのデバッグ．
-- 紙テープドライブ, 磁気テープドライブエミュレータ実装．
+- 磁気テープドライブエミュレータ実装．(紙テープは実装済)
 - Universal Monitor関連．
-  - コンテキスト保存，復帰．拡張メモリ対応．
-  - (仮想)SWレジスタ
+  - コンテキスト保存，復帰．
 
 <!--
 # 動画
