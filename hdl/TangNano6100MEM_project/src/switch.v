@@ -10,7 +10,7 @@ module switch
     parameter DEBOUNCE   = 10,	       // wait time for debounce (ms)
     parameter DOUBLE     = 500,	       // time for double click  (ms)
     parameter HOLD       = 1000,       // wait time for hold     (ms)
-    parameter REPEAT     = 33,         // repeat cycle           (ms)
+    parameter REPEAT     = 40,         // repeat cycle           (ms)
     parameter WIDTH      = 3	       // bit width of sw_count
     )
   (
@@ -19,7 +19,7 @@ module switch
    output reg		    sw_deb,	// debounced switch
    output		    sw_hold,	// hold switch
    output		    sw_double,	// double click
-   output		    sw_repeat,	// repeat (enabled after hold)
+   output		    sw_repeat,	// repeat
    output		    sw_toggle,	// toggle switch = sw_count[0]
    output		    sw_posedge,	// positive edge
    output		    sw_negedge,	// negative edge
@@ -120,15 +120,15 @@ module switch
 //------------------------------------------------------------------------
 // Repeated Click
 //------------------------------------------------------------------------
-  assign sw_repeat = reg_repeat;
+  assign sw_repeat = sw_deb & reg_repeat;
   reg [25:0]		cnt_repeat;
   reg			reg_repeat;
   always @(posedge clk)
-    if( ~sw_hold ) begin
+    if( sw_posedge ) begin
        cnt_repeat <= 0;
-       reg_repeat <= 0;
+       reg_repeat <= 1'b1;
     end
-    else if(cnt_repeat == REPEAT_CLK / 2) begin
+    else if(cnt_repeat == (REPEAT_CLK / 2) - 1) begin
        cnt_repeat <= 0;
        reg_repeat <= ~reg_repeat;
     end

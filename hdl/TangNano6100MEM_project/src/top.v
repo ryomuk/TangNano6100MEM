@@ -2,7 +2,7 @@
 // TangNano6100MEM
 // Memory System and Peripherals for IM6100 using Tang Nano 20K
 //
-// version 20260129
+// version 20260201
 //
 // by Ryo Mukai
 //
@@ -20,6 +20,7 @@
 //                 - Universal Monitor on CP Memory
 // 2026/01/29: - bug fixed (done flag of RK status register)
 //             - dbg_mode (slow clock and full instruction log) implemented
+// 2026/02/01: - paper tape emulator implimented
 //---------------------------------------------------------------------------
 
 `define USE_DBGLOG   // output debug information to DBG_TX
@@ -81,8 +82,9 @@ module top
   // CPU_CLK_RATIO = SYS_CLK_FRQ / CPU_CLK_FRQ
 //  parameter CPU_CLK_RATIO =  4;   // 6.75MHz (some IM6100A works @5V)
 //  parameter CPU_CLK_RATIO =  5;   // 5.4 MHz (most IM6100A works @5V)
-  parameter CPU_CLK_RATIO =  6;   // 4.5 MHz (IM6100A safe driving @5V)
-//  parameter CPU_CLK_RATIO =  8;   // 3.375MHz
+//  parameter CPU_CLK_RATIO =  6;   // 4.5 MHz
+//  parameter CPU_CLK_RATIO =  7;   // 3.857MHz
+  parameter CPU_CLK_RATIO =  8;   // 3.375MHz (IM6100A safe driving @5V)
 //  parameter CPU_CLK_RATIO =  9;   // 3.0MHz  (IM6100-1 @5V)
 //  parameter CPU_CLK_RATIO = 11;   // 2.45MHz (IM6100 @5V)
 //  parameter CPU_CLK_RATIO = 27;   // 1.0 MHz
@@ -129,6 +131,13 @@ module top
   parameter IOT_IOF   = 12'o6002; // Interrupt disabled
   parameter IOT_CAF   = 12'o6007; // Clear all flags, Interrupt disabled
   
+  // Paper Tape Reader (PR)
+  parameter IOT_RPE   = 12'o6010; // Set/Clear IE (not implemented yet)
+  parameter IOT_RSF   = 12'o6011; // Reader Skip if Flag
+  parameter IOT_RRB   = 12'o6012; // Read Reader Buffer
+  parameter IOT_RFC   = 12'o6014; // Reader Fetch Character
+  parameter IOT_RFCRRB = 12'o6016; // Read Buffer and fetch new char
+
   // TTY input (Keyboard, KB)
   parameter IOT_KSF   = 12'o6031; // Skip on KB Flag
   parameter IOT_KCC   = 12'o6032; // Clear KB Flag and AC, Advance reader
@@ -155,6 +164,9 @@ module top
   parameter IOT_RMF   = 12'o6244;
   parameter IOT_LIF   = 12'o6254;
     
+  // user's device
+  parameter IOT_SWR   = 12'o6301; // Load SW register
+
   // RK disk 67X[1-6] (X=4)
   parameter IOT_DSKP  = 12'o6741;
   parameter IOT_DCLR  = 12'o6742;
@@ -162,6 +174,8 @@ module top
   parameter IOT_DLCA  = 12'o6744;
   parameter IOT_DRST  = 12'o6745;
   parameter IOT_DLDC  = 12'o6746;
+
+  
 
 //---------------------------------------------------------------------------
 // Initial Memory Data
@@ -217,6 +231,7 @@ module top
 //---------------------------------------------------------------------------
   wire       sw1_deb;
   wire       sw1_hold;
+  wire       sw1_posedge;
   wire [2:0] sw1_count;
   switch
     #(.CLK_FRQ(SYS_CLK_FRQ)
@@ -227,8 +242,9 @@ module top
        .sw_deb     (sw1_deb),
        .sw_hold    (sw1_hold),
        .sw_count   (sw1_count),
+       .sw_posedge (sw1_posedge),
        .reset_count(sw1_hold),
-       .sw_double(),.sw_repeat(),.sw_toggle(),.sw_posedge(),.sw_negedge()
+       .sw_double(),.sw_repeat(),.sw_toggle(),.sw_negedge()
        );
 
 //---------------------------------------------------------------------------
@@ -236,6 +252,7 @@ module top
 //---------------------------------------------------------------------------
   wire       sw2_deb;
   wire       sw2_hold;
+  wire       sw2_repeat;
   wire       sw2_double;
   wire       sw2_toggle;
   wire       sw2_posedge;
@@ -253,7 +270,8 @@ module top
        .sw_count   (sw2_count),
        .reset_count(sw2_hold),
        .sw_posedge (sw2_posedge),
-       .sw_repeat(),.sw_negedge()
+       .sw_repeat  (sw2_repeat),
+       .sw_negedge()
        );
 
 //---------------------------------------------------------------------------
@@ -438,11 +456,19 @@ module top
 		 (~MEMSEL_n) ? d_mem_to_cpu :
 		 (~DEVSEL_n) ? dev_data :
 		 (~CPSEL_n)  ? mem_cp[address] :
-		 (~SWSEL_n)  ? reg_switch :
+		 (~SWSEL_n)  ? REG_SWITCH :
 		 12'bzzzz_zzzz_zzzz; // HiZ if nothing is selected
 
   //  reg [11:0] reg_switch = 12'o000; // not implemented
-  parameter reg_switch = 12'o000;
+
+//---------------------------------------------------------------------------
+// Switch Register
+// write by IOT_SWR (6301) (my own defined device)
+//---------------------------------------------------------------------------
+  reg [11:0] REG_SWITCH = 0;
+  always @( posedge sys_clk )
+    if(dev_write & (address == IOT_SWR))
+      REG_SWITCH <= DXin;
   
 //---------------------------------------------------------------------------
 // Memory Extension
@@ -589,6 +615,65 @@ module top
       {kbd_data[7:0], rx_clear} <= {(8'h80 | rx_data[7:0]), 1'b1};
     else if(rx_data_ready == 1'b0)
       rx_clear <= 1'b0;  // disable rx_clear after rx_data_ready is cleared
+
+//---------------------------------------------------------------------------
+// Paper Tape Reader
+//---------------------------------------------------------------------------
+  reg	       pt_rewind;
+  always @(posedge sys_clk)
+    pt_rewind <= sw1_posedge;
+  
+  wire [7:0] PR_BUF;  // output buffer of sdtape module
+  reg [7:0]  pr_data;
+  reg	     pt_read;
+  reg	     pt_clear_done;
+  reg	     pr_data_ready;
+  // pt_read_done is 'buf data ready' (=buffer read done)
+  wire	     PR_flag = (~pt_read_busy) & pt_read_done & ~pt_eot; 
+  always @(posedge sys_clk or negedge RESET_n)
+    if( ~RESET_n)
+      {pt_read, pt_clear_done} <= 0;
+    else if( dev_start )
+      case (address)
+	IOT_RFC:
+	  pt_read <= 1'b1; // load data to buffer
+	IOT_RRB: begin
+	   pr_data[7:0] <= PR_BUF[7:0];
+	   pt_clear_done <= 1'b1;
+	end
+	IOT_RFCRRB: begin
+	   pr_data[7:0] <= PR_BUF[7:0];
+	   pt_read <= 1'b1;
+	end
+	default:;
+      endcase
+    else begin
+       if( pt_read_done == 1'b0)
+	 pt_clear_done <= 0;
+       if( pt_read_busy | pt_read_done)
+	 pt_read <= 0;
+    end
+  
+//---------------------------------------------------------------------------
+// data from device to CPU
+//---------------------------------------------------------------------------
+  wire [11:0] dev_data;
+  assign dev_data
+    =
+     // TTY input
+     (address == IOT_KRS)  ? {4'b0000, kbd_data} :
+     (address == IOT_KRB)  ? {4'b0000, kbd_data} :
+     // Paper Tape Reader
+     (address == IOT_RRB)     ? {4'b0000, pr_data} :
+     (address == IOT_RFCRRB)  ? {4'b0000, pr_data} :
+     // extended memory
+     (address == IOT_GTF)  ? {3'b000, REG_IIFF, 2'b00, REG_SF[5:0]} :
+     (address == IOT_RDF)  ? {6'b000_000, REG_DF, 3'b000} :
+     (address == IOT_RIF)  ? {6'b000_000, REG_IF, 3'b000} :
+     (address == IOT_RIB)  ? {6'b000_000, REG_SF[5:0]} :
+     // RK disk Status Register (Error flag is not implemented)
+     (address == IOT_DRST) ? {RK_DONE, 11'b00_000_000_000}:
+     0;
   
 //---------------------------------------------------------------------------
 // C0_n, C1_n, and SKP_n.
@@ -605,23 +690,27 @@ module top
     if( dev_start )
       case (address)
 	// TTY input
-	IOT_KSF:  c01s_n <= {H, H, ~KB_flag};
-	IOT_KCC:  c01s_n <= {L, H, H};
-	IOT_KRS:  c01s_n <= {H, L, H};
-	IOT_KRB:  c01s_n <= {L, L, H};
+	IOT_KSF:    c01s_n <= {H, H, ~KB_flag};
+	IOT_KCC:    c01s_n <= {L, H, H};
+	IOT_KRS:    c01s_n <= {H, L, H};
+	IOT_KRB:    c01s_n <= {L, L, H};
 	// TTY output
-	IOT_TSF:  c01s_n <= {H, H, ~TP_flag};
+	IOT_TSF:    c01s_n <= {H, H, ~TP_flag};
+	// Paper Tape Reader
+	IOT_RSF:    c01s_n <= {H, H, ~PR_flag};
+	IOT_RRB:    c01s_n <= {H, L, H};
+	IOT_RFCRRB: c01s_n <= {H, L, H};
 	// extended memory
-	IOT_GTF:  c01s_n <= {L, L, H};
-	IOT_RDF:  c01s_n <= {H, L, H};
-	IOT_RIF:  c01s_n <= {H, L, H};
-	IOT_RIB:  c01s_n <= {H, L, H};
+	IOT_GTF:    c01s_n <= {L, L, H};
+	IOT_RDF:    c01s_n <= {H, L, H};
+	IOT_RIF:    c01s_n <= {H, L, H};
+	IOT_RIB:    c01s_n <= {H, L, H};
 	// RK disk
-	IOT_DSKP: c01s_n <= {H, H, ~RK_DONE};
-	IOT_DCLR: c01s_n <= {L, H, H};
-	IOT_DLCA: c01s_n <= {L, H, H};
-	IOT_DRST: c01s_n <= {L, L, H};
-	IOT_DLDC: c01s_n <= {L, H, H};
+	IOT_DSKP:   c01s_n <= {H, H, ~RK_DONE};
+	IOT_DCLR:   c01s_n <= {L, H, H};
+	IOT_DLCA:   c01s_n <= {L, H, H};
+	IOT_DRST:   c01s_n <= {L, L, H};
+	IOT_DLDC:   c01s_n <= {L, H, H};
 	default: 
 	  c01s_n <= {H, H, H};
       endcase
@@ -629,55 +718,94 @@ module top
       c01s_n <= {H, H, H};
 
 //---------------------------------------------------------------------------
-// UART instances
+// Interface for SD memory
 //---------------------------------------------------------------------------
-  uart_rx#
-    (
-     .CLK_FRQ(SYS_CLK_FRQ),
-     .BAUD_RATE(UART_BPS)
-     ) uart_rx_inst
-      (
-       .clk           (sys_clk      ),
-       .reset_n       (RESET_n      ),
-       .rx_data       (rx_data      ),
-       .rx_data_ready (rx_data_ready),
-       .rx_clear      (rx_clear),
-       .rx_in         (uart_rx      )
-       );
+  // clock for sdhd and sdtape
+  parameter	 SD_SYS_FRQ   = SYS_CLK_FRQ;
+  parameter	 SD_MEM_FRQ   =1000_000;
+//  parameter	 SD_MEM_FRQ   = 800_000;
+//  parameter	 SD_MEM_FRQ   = 400_000;
+  wire		 sd_sys_clk   = sys_clk;
+  wire		 SD_RESET_n   = RESET_n;		 
 
-  uart_tx#
-    (
-     .CLK_FRQ(SYS_CLK_FRQ),
-     .BAUD_RATE(UART_BPS)
-     ) uart_tx_inst
-      (
-       .clk           (sys_clk),
-       .reset_n       (RESET_n),
-       .tx_data       (tx_data),
-       .tx_send       (tx_send),
-       .tx_ready      (tx_ready),
-       .tx_out        (uart_tx)
-       );
+  parameter DEV_RK = 0;
+  parameter DEV_PT = 1;
 
+  wire	    sd_dev = pt_read_busy  ? DEV_PT : DEV_RK;
+
+  assign {sd_clk, sd_mosi, sd_cs_n}
+    = (sd_dev == DEV_PT) ?
+      {pt_clk, pt_mosi, pt_cs_n} :
+      {rk_clk, rk_mosi, rk_cs_n};
+  
+//---------------------------------------------------------------------------
+// SD memory Paper tape emulator
+//---------------------------------------------------------------------------
+  wire pt_clk;
+  wire pt_mosi;
+  wire pt_miso = sd_miso;
+  wire pt_cs_n;
+
+  wire pt_read_busy;
+  wire pt_read_done;
+  
+  wire [3:0]  pt_error;
+  wire [4:0]  pt_state;
+  wire [30:0] pt_address;
+  wire	      pt_eot;
+
+  parameter   PT_START     = 21'o0100000;
+  parameter   PT_SIZE      = 21'o0002000;
+
+  wire [2:0]  pt_select = sw1_count;
+  
+  wire [21:0]  pt_start_block
+	       = PT_START + (PT_SIZE * pt_select);
+
+//---------------------------------------------------------------------------
+// SD memory Hard disk emulator
+//---------------------------------------------------------------------------
+  reg	      disk_read;
+  reg	      disk_write;
+  reg	      disk_nop;
+  wire	      disk_ready;
+  wire	      disk_busy  = ~disk_ready;
+  wire [4:0]  sd_state;
+  wire [3:0]  sd_error;
+
+  wire	      rk_clk;
+  wire	      rk_miso = sd_miso;
+  wire	      rk_mosi;
+  wire	      rk_cs_n;
+  
 //---------------------------------------------------------------------------
 // RK Disk
 // 256 word x 16 sector x 203 cyl(track) x 2 surface
-// 6496 * 256word(512byte) block
+// 6496 * 256word(512byte) block (1,662,976 word)
 //
 // 1 block = 256word = 512B = 01000B
 // SD memory block
 // each RK05 disk image uses first 6496 block in 8192 block.
 // (DRIVE_BLOCK_SIZE = 8192 (= 16 * 2 * 256))
-//        0-  8191: RK0 (00000000)
-//     8192- 16383: RK1 (00020000)
-//    16384- 24575: RK2 (00040000)
-//    24576- 32767: RK3 (00060000)
+//        0- 8191: RK0 (00000000)
+//     8192-16383: RK1 (00020000)
+//    16384-24575: RK2 (00040000)
+//    24576-32767: RK3 (00060000)
+//    32768-33791: TP0 (00100000)
+//    33792-34815: TP1 (00102000)
+//    34816-35839: TP2 (00104000)
+//    35840-36863: TP3 (00106000)
+//    36864-37887: TP4 (00110000)
+//    37888-38911: TP5 (00112000)
+//    38912-39935: TP6 (00114000)
+//    39936-40959: TP7 (00116000)
 //
 // # sample for making a sd image from multiple disk images
 // dd if=rk0 of=sd.dsk
 // dd if=rk1 of=sd.dsk seek=8192  conv=notrunc
 // dd if=rk2 of=sd.dsk seek=16384 conv=notrunc
 // dd if=rk3 of=sd.dsk seek=24576 conv=notrunc
+// dd if=tp0 of=sd.dsk seek=32768 conv=notrunc
 //
 //---------------------------------------------------------------------------
   reg [11:0]  RK_REG_CMD;
@@ -689,12 +817,9 @@ module top
   wire	      RK_IOD         = RK_REG_CMD[8];  // interrupt on done
   wire [2:0]  RK_command     = RK_REG_CMD[11:9];
 
-  wire [2:0]  USER_drivesel = sw1_count;
-
   parameter   DRIVE_BLOCK_SIZE = 16 * 2 * 256;
   wire [19:0] RK_block_address =  DRIVE_BLOCK_SIZE * RK_drivesel
-	      + {RK_cyl_MSB, RK_REG_cyl, RK_REG_sur, RK_REG_sect}
-	      + DRIVE_BLOCK_SIZE * USER_drivesel; // for debug etc.
+	      + {RK_cyl_MSB, RK_REG_cyl, RK_REG_sur, RK_REG_sect};
   
   reg [11:0]  RK_current_address;
   reg [15:0]  RK_dma_start_address; // byte address
@@ -806,70 +931,6 @@ module top
   wire	      dma_write;
 
 //---------------------------------------------------------------------------
-// SD memory Hard disk emulator
-//---------------------------------------------------------------------------
-  reg	      disk_read;
-  reg	      disk_write;
-  reg	      disk_nop;
-  wire	      disk_ready;
-  wire	      disk_busy  = ~disk_ready;
-  wire [4:0]  sd_state;
-  wire [3:0]  sd_error;
-
-  // clock for sdhd and sdtape
-  parameter	 SD_SYS_FRQ   = SYS_CLK_FRQ;
-  parameter	 SD_MEM_FRQ   =1000_000;
-//  parameter	 SD_MEM_FRQ   = 800_000;
-//  parameter	 SD_MEM_FRQ   = 400_000;
-  wire		 sd_sys_clk   = sys_clk;
-  wire		 SD_RESET_n   = RESET_n;		 
-  sdhd #( .SYS_FRQ(SD_SYS_FRQ),
-	  .MEM_FRQ(SD_MEM_FRQ),
-	  .DMA_MSB(15)          // for 15bit byte (=14 bit word) address bus
-	  ) sdhd_inst
-  (.i_clk                (sd_sys_clk),
-   .i_reset_n            (SD_RESET_n),
-   .i_sd_det_n           (1'b0),  // Tang Console's sd_det_n seems not working
-                                  // Tang Nano doesn't have det_n
-   //   .i_sd_det_n           (sd_det_n),
-   .i_sd_miso            (sd_miso),
-   .o_sd_mosi            (sd_mosi),
-   .o_sd_cs_n            (sd_cs_n),
-   .o_sd_clk             (sd_clk),
-   .o_disk_ready         (disk_ready),
-   .i_disk_read          (disk_read),
-   .i_disk_write         (disk_write),
-   .i_disk_nop           (disk_nop),
-   .i_disk_block_address (disk_block_address),
-   .o_dma_address        (dma_address),
-   .i_dma_start_address  (dma_start_address),
-   .i_dma_wordcount      (dma_wordcount),
-   .i_dma_data           (d_mem_to_dma),
-   .o_dma_data           (d_dma_to_mem),
-   .o_dma_write          (dma_write),
-   .o_sd_state           (sd_state),
-   .o_sd_error           (sd_error)
-   );
-
-//---------------------------------------------------------------------------
-// data from device to CPU
-//---------------------------------------------------------------------------
-  wire [11:0] dev_data;
-  assign dev_data
-    =
-     // TTY input
-     (address == IOT_KRS)  ? {4'b0000, kbd_data} :
-     (address == IOT_KRB)  ? {4'b0000, kbd_data} :
-     // extended memory
-     (address == IOT_GTF)  ? {3'b000, REG_IIFF, 2'b00, REG_SF[5:0]} :
-     (address == IOT_RDF)  ? {6'b000_000, REG_DF, 3'b000} :
-     (address == IOT_RIF)  ? {6'b000_000, REG_IF, 3'b000} :
-     (address == IOT_RIB)  ? {6'b000_000, REG_SF[5:0]} :
-     // RK disk Status Register (Error flag is not implemented)
-     (address == IOT_DRST) ? {RK_DONE, 11'b00_000_000_000}:
-     0;
-  
-//---------------------------------------------------------------------------
 // Clock timer
 //---------------------------------------------------------------------------
   parameter TIMER_FRQ = 30; // Hz
@@ -951,6 +1012,98 @@ module top
 	 IRQ_timer <= 1'b1;
     end
   
+//---------------------------------------------------------------------------
+// UART instances
+//---------------------------------------------------------------------------
+  uart_rx#
+    (
+     .CLK_FRQ(SYS_CLK_FRQ),
+     .BAUD_RATE(UART_BPS)
+     ) uart_rx_inst
+      (
+       .clk           (sys_clk      ),
+       .reset_n       (RESET_n      ),
+       .rx_data       (rx_data      ),
+       .rx_data_ready (rx_data_ready),
+       .rx_clear      (rx_clear),
+       .rx_in         (uart_rx      )
+       );
+
+  uart_tx#
+    (
+     .CLK_FRQ(SYS_CLK_FRQ),
+     .BAUD_RATE(UART_BPS)
+     ) uart_tx_inst
+      (
+       .clk           (sys_clk),
+       .reset_n       (RESET_n),
+       .tx_data       (tx_data),
+       .tx_send       (tx_send),
+       .tx_ready      (tx_ready),
+       .tx_out        (uart_tx)
+       );
+
+//---------------------------------------------------------------------------
+// SD memory instances
+//---------------------------------------------------------------------------
+  sdtape #( .SYS_FRQ(SD_SYS_FRQ),
+            .MEM_FRQ(SD_MEM_FRQ)
+            ) sdtape_inst
+    (.i_clk              (sd_sys_clk),
+     .i_reset_n          (SD_RESET_n),
+     .i_sd_det_n         (1'b0),
+     .i_sd_miso          (pt_miso),
+     .o_sd_mosi          (pt_mosi),
+     .o_sd_cs_n          (pt_cs_n),
+     .o_sd_clk           (pt_clk),
+     .o_tape_read_busy   (pt_read_busy),
+     .o_tape_read_done   (pt_read_done),
+     .o_tape_punch_ready (),
+     .i_tape_read        (pt_read),
+     .i_tape_punch       (1'b0),
+     .i_tape_clear_done  (pt_clear_done),
+     .i_tape_punch_data  (8'b0),
+     .o_tape_read_data   (PR_BUF),
+     .i_tape_flush       (1'b0),
+     .i_tape_rewind      (pt_rewind),
+     .o_tape_endoftape   (pt_eot),
+     .i_tape_start_block (pt_start_block),
+     .i_tape_start_block_write (22'b0),
+     .o_sd_state         (),
+     .o_sd_error         (),
+     .o_sd_tape_address  (pt_address),
+     .o_sd_tape_address_write ()
+     );
+
+  sdhd #( .SYS_FRQ(SD_SYS_FRQ),
+	  .MEM_FRQ(SD_MEM_FRQ),
+	  .DMA_MSB(15)          // for 15bit byte (=14 bit word) address bus
+	  ) sdhd_inst
+  (.i_clk                (sd_sys_clk),
+   .i_reset_n            (SD_RESET_n),
+   .i_sd_det_n           (1'b0),  // Tang Console's sd_det_n seems not working
+                                  // Tang Nano doesn't have det_n
+   //   .i_sd_det_n           (sd_det_n),
+   .i_sd_miso            (rk_miso),
+   .o_sd_mosi            (rk_mosi),
+   .o_sd_cs_n            (rk_cs_n),
+   .o_sd_clk             (rk_clk),
+   .o_disk_ready         (disk_ready),
+   .i_disk_read          (disk_read),
+   .i_disk_write         (disk_write),
+   .i_disk_nop           (disk_nop),
+   .i_disk_block_address (disk_block_address),
+   .o_dma_address        (dma_address),
+   .i_dma_start_address  (dma_start_address),
+   .i_dma_wordcount      (dma_wordcount),
+   .i_dma_data           (d_mem_to_dma),
+   .o_dma_data           (d_dma_to_mem),
+   .o_dma_write          (dma_write),
+   .o_sd_state           (sd_state),
+   .o_sd_error           (sd_error)
+   );
+
+
 //---------------------------------------------------------------------------
 // LED array for debug
 //---------------------------------------------------------------------------
@@ -1042,38 +1195,43 @@ module top
      led_g[1] <= {2'b00, ~SWSEL_n, ~CPSEL_n, ~DEVSEL_n, ~MEMSEL_n};
      led_b[1] <= 0;
 
-     led_r[2] <= {rx_data_ready, ~sd_mosi, 3'b000, SD_ERR};
+     led_r[2] <= {~sd_mosi, rx_data_ready, 2'b000, SD_ERR};
      led_g[2] <= 0;
-     led_b[2] <= {tx_send,       ~sd_miso, 4'b0000};
+     led_b[2] <= {~sd_miso, tx_send,       4'b0000};
 
      {led_r[3], led_r[4]} <= last_inst_addr[11:0];
      {led_g[3], led_g[4]} <= {last_inst_addr[14:12], 9'b000000000};
      {led_b[3], led_b[4]} <= 0;
 
-     {led_r[5], led_r[6]} <= 0;
-     {led_g[5], led_g[6]} <= 0;
-     {led_b[5], led_b[6]} <= last_inst;
+//     {led_r[5], led_r[6]} <= 0;
+//     {led_g[5], led_g[6]} <= 0;
+//     {led_b[5], led_b[6]} <= last_inst;
+     {led_r[5], led_r[6]} <= {pt_eot, 11'b00000_000000};
+     {led_g[5], led_g[6]} <= pt_address[23:12];
+     {led_b[5], led_b[6]} <= pt_address[11:0];
+	
+     // memory extention registers
+     led_r[7] <= 0;
+     led_g[7] <= {REG_IF, 3'b000};
+     led_b[7] <= {3'b000, REG_DF};
+     led_r[8] <= {REG_IIFF, 5'b00000};
+     led_g[8] <= {REG_IB, 3'b000};
+     led_b[8] <= REG_SF;
 
-     if( sw2_count[0] == 1'b0 ) begin // memory extention registers
-	  led_r[7] <= 0;
-	  led_g[7] <= {REG_IF, 3'b000};
-	  led_b[7] <= {3'b000, REG_DF};
-	  led_r[8] <= {REG_IIFF, 5'b00000};
-	  led_g[8] <= {REG_IB, 3'b000};
-	  led_b[8] <= REG_SF;
-     end
-     else begin // sd memory error/status code
-	  led_r[7] <= sd_error;
-	  led_g[7] <= 0;
-	  led_b[7] <= 0;
-	  led_r[8] <= 0;
-	  led_g[8] <= 0;
-	  led_b[8] <= sd_state;
-     end
+     // sd memory error/status code
+//	led_r[7] <= sd_error;
+//	led_g[7] <= 0;
+//	led_b[7] <= 0;
+//	led_r[8] <= 0;
+//	led_g[8] <= 0;
+//	led_b[8] <= sd_state;
 
-//     led_r[9] <= {sw2, sw2_deb, sw2_hold, sw2_double, sw2_toggle, 1'b0};
+//     led_r[9] <= {sw2,sw2_deb,sw2_repeat,sw2_hold,sw2_double,sw2_toggle};
+//     led_g[9] <= {3'b000, sw1_count};
+//     led_b[9] <= 0;
+
      led_r[9] <= 0;
-     led_g[9] <= {sw2_count, sw1_count};
+     led_g[9] <= 0;
      led_b[9] <= 0;
   end
 
@@ -1170,6 +1328,9 @@ module top
 	   IOT_ION:  opname = "ION  ";
 	   IOT_IOF:  opname = "IOF  ";
 	   IOT_CAF:  opname = "CAF  ";
+	   IOT_RSF:  opname = "RSF  ";
+	   IOT_RFC:  opname = "RFC  ";
+	   IOT_RFCRRB: opname = "RFCRB";
 	   IOT_KSF:  opname = "KSF  ";
 	   IOT_KCC:  opname = "KCC  ";
 	   IOT_KRS:  opname = "KRS  ";
@@ -1265,8 +1426,10 @@ module top
      endcase
   endfunction
   
-  wire trg_log_inst = posedge_RUN_HLT_n 
-       | (dbg_mode & (inst_read | inst_cp_read));
+  wire trg_log_inst = dbg_mode ?
+//       (inst_read | inst_cp_read) :
+       inst_read :
+       (last_inst_space == INST_SPACE_MAIN) &  posedge_RUN_HLT_n;
 
   wire trg_log_disk = disk_read | disk_write;
   always @(posedge sys_clk or negedge RESET_n)

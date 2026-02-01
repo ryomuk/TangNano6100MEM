@@ -29,6 +29,12 @@ DCA_I_00017	MACRO
 	ENDIF
 	ENDM
 
+	IF USE_TANGNANO
+	;; data field instruction
+RDF	MACRO
+	DC 06214
+	ENDM
+	ENDIF
 ;;;
 ;;; Zero Page
 ;;;
@@ -195,6 +201,15 @@ WSTART:
 	JMP	IL LOADH
 	ENDIF
 
+	IF USE_TANGNANO
+	TAD	L 'L'-'W'
+	SNA
+	JMP	IL SWREG	; SW register R/W
+	TAD	L 'W'-'F'
+	SNA
+	JMP	IL FIELD	; Data Field R/W
+	ENDIF
+
 ERR:
 	CLA
 	TAD	L ERRMSG-1
@@ -202,7 +217,65 @@ ERR:
 	JMS	I C_STROUT
 	JMP	WSTART
 
+	IF USE_TANGNANO
+;;; Switch Register
+;;; Software writable Switch Register
+;;; IOT_SWR 6301 (my own defined IOT instruction)
+SWREG:	
+	ISZ	00017		; Inc 00017 (never skip)
+	JMS	I C_SKIPSP
+	JMS	I C_RDOCT
+	JMS	I C_SKIPSP
+	CLA
+	TAD	CH
+	SZA
+	JMP	I C_ERR
+	TAD	CNT
+	SNA
+	JMP	SW1
+	CLA
+	TAD	VAL
+	DC 006301		; IOT_6301
+SW1:
+	CLA
+	OSR
+	DCA     VAL
+	JMS     I C_OCTOUT4
+	JMS     I C_CRLF
+	JMP	I C_WSTART
+
+;;; Change Data Field
+FIELD:	
+	ISZ	00017		; Inc 00017 (never skip)
+	JMS	I C_SKIPSP
+	JMS	I C_RDOCT
+	JMS	I C_SKIPSP
+	CLA
+	TAD	CH
+	SZA
+	JMP	I C_ERR
+	TAD	CNT
+	SNA
+	JMP	FLD1
+	CLA CLL
+	TAD	VAL
+	RAL
+	RTL
+	AND	L 0070
+	TAD     L 06201		; make CDF instruction
+	DCA     .+1		; deposit it
+	NOP			; here is the instruction
+FLD1:
+	CLA CLL
+	RDF
+	RTR
+	RAR
+	DCA     VAL
+	JMS     I C_OCTOUT4
+	JMS     I C_CRLF
+	JMP	I C_WSTART
 	LTORG
+	ENDIF
 
 ;;; Dump memory
 

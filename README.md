@@ -15,7 +15,9 @@ This document is written mostly in Japanese, so please use machine translation i
   - PCB rev2.1
   - HDL version 20260128
 - 2026/01/29: HDLアップデート(version 20260129)
-
+- 2026/02/01: HDLアップデート(version 20260201)
+  - 紙テープエミュレータ実装
+  
 ## 主なファイル一覧
 ```
 .
@@ -28,6 +30,7 @@ This document is written mostly in Japanese, so please use machine translation i
 │            ├── mem.v      : メモリ初期データ(OS/8 bootloader)
 │            ├── mem_cp.v   : CPメモリデータ(unimon)
 │            ├── sdhd.v     : HDエミュレータモジュール
+│            ├── sdtape.v   : 紙tapeエミュレータモジュール
 │            ├── switch.v   : スイッチ用モジュール
 │            ├── TangNano6100MEM_project.sdc : 時間制約(適当)
 │            ├── tn20k.cst  :  物理制約(ピンアサイン)
@@ -56,7 +59,7 @@ This document is written mostly in Japanese, so please use machine translation i
 - [インターフェース](doc/04_Interface.md)
 - [SDメモリ](doc/05_SDmemory.md)
 - [応用例](doc/06-0_applications.md)
-  - [デバッグモニタ](doc/06-1_monitor.md)
+  - [ベアメタル](doc/06-1_baremetal.md)
   - [紙テープソフト](doc/06-2_papertape.md)
   - [OS/8](doc/06-3_os8.md)
 - [デバッグツール](doc/07_debugtool.md)
@@ -81,7 +84,9 @@ This document is written mostly in Japanese, so please use machine translation i
 ### 今後の予定，ToDo
 - いろいろ動かないところのデバッグ．
 - 紙テープドライブ, 磁気テープドライブエミュレータ実装．
-- Universal Monitor関連．コンテキスト保存，復帰．拡張メモリ対応．
+- Universal Monitor関連．
+  - コンテキスト保存，復帰．拡張メモリ対応．
+  - (仮想)SWレジスタ
 
 <!--
 # 動画
