@@ -513,8 +513,10 @@ module top
 //      if ((last_op == OP_JMS) | (last_op == OP_JMP))
 //	{REG_IF, REG_IIFF} <= {REG_IB, 1'b0};
   
-  always @(posedge sys_clk)
-    if(posedge_INTGNT)
+  always @(posedge sys_clk  or negedge RESET_n)
+    if( ~RESET_n )
+      REG_SF <= 0;
+    else if( posedge_INTGNT )
       REG_SF <= {REG_IF, REG_DF};
 		  
 //---------------------------------------------------------------------------
