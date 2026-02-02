@@ -14,6 +14,7 @@ This document is written mostly in Japanese, so please use machine translation i
 - 2026/01/28: 初版公開
 - 2026/02/01: version 20260201, 紙テープエミュレータ実装
 - 2026/02/02: version 20260202, 割り込み関連のバグ修正
+- 2026/02/02: CP空間のuniversal monitorにコンテキストの保存復帰を実装しました．
   
 ## 主なファイル一覧
 ```
@@ -79,13 +80,11 @@ This document is written mostly in Japanese, so please use machine translation i
 - ~~OS/8 BASICでSTRTRK.BAやSNOOPY.BAが動かない．~~ 動きました．
 
 ### 今後の予定，ToDo
-- いろいろ動かないところのデバッグ．
-- 磁気テープドライブエミュレータ実装．(紙テープは実装済)
-- Universal Monitor関連．
-  - コンテキスト保存，復帰．
+- 紙テープイメージからOS/8のディスクイメージを作成
+- 磁気テープドライブエミュレータ実装．(紙テープは実装済なので，必要でなければやらないかも)
 
 <!--
 # 動画
-- [UNIX V6 on DEC DCJ-11 (PDP-11) with Tang Console 138K](https://www.youtube.com/watch?v=6rK0t8tJp9Y)
+- 未
 -->
 

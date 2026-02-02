@@ -30,9 +30,13 @@ DCA_I_00017	MACRO
 	ENDM
 
 	IF USE_TANGNANO
-	;; data field instruction
+	;; read data field
 RDF	MACRO
 	DC 06214
+	ENDM
+	;; read instruction field
+RIF	MACRO
+	DC 06224
 	ENDM
 	ENDIF
 ;;;
@@ -44,8 +48,9 @@ RDF	MACRO
 	ENDIF
 	IF USE_CP
 	ORG     0
-S_PC:		DC 0		; saved PC
+S_PC:		DC 0		; saved PC by CP REQ GRANT
 S_AC:		DS 1		; saved AC
+S_FLAGS:	DS 1		; L,0,IREQ,IIF,IEFF,0,<IF>,<DF>
 
 	ORG	ENTRY
 C_CSTART:	DC	CSTART
@@ -62,7 +67,6 @@ C_RDOCT:	DC	RDOCT
 C_GETLIN:	DC	GETLIN
 C_OCTOUT4:	DC	OCTOUT4
 C_CRLF:		DC	CRLF
-C_SHOWPROG:     DC	SHOWPROG
 	ELSE ; not USE_CP
 	ORG	ENTRY
 C_CSTART:
@@ -92,10 +96,6 @@ C_OCTOUT4:
 	DS	1
 C_CRLF:
 	DS	1
-	IF USE_TANGNANO
-C_SHOWPROG:
-	DS	1
-	ENDIF
 	ENDIF ; USE_CP
 ;;;
 ;;;
@@ -104,8 +104,26 @@ C_SHOWPROG:
 	ORG	PROG_B
 
 	IF USE_CP
-	;;
 CSTART:
+	;; save context
+	DCA 	S_AC		; Save AC
+	GTF			; L,0,IRQ,IFF,IEFF,0,<SF>
+	AND     L 07700		; mask SF
+	DCA	S_FLAGS		; Save Flags
+	CLL
+	RDF
+	RAR
+	RTR
+	RIF
+	TAD	S_FLAGS
+	DCA	S_FLAGS		; L,0,IRQ,IFF,IEFF,0,<IF>,<DF>
+
+	;; LET DF = IF
+	RIF
+	TAD 	L 06201		; CDF
+	DCA .+1			; deposit CDF to (PC+1)
+	NOP			; here is CDF
+
 	ELSE ; not USE_CP
 	;; 
 ENTTAB:
@@ -123,9 +141,6 @@ ENTTAB:
 	DC	GETLIN
 	DC	OCTOUT4
 	DC	CRLF
-	IF USE_TANGNANO
-	DC	SHOWPROG
-	ENDIF
 ENTTAB_E:
 
 CSTART:
@@ -160,12 +175,19 @@ INI0:
 	JMS	I C_STROUT
 
 	IF USE_CP
-	;; 	print saved PC
+	;; 	print IF
+	RIF
+	RTR
+	RAR
+	TAD	L '0'
+	DCA	CH		; show IF
+	JMS	I C_CONOUT
 	CLA
 	TAD	S_PC
 	DCA	VAL
 	JMS	I C_OCTOUT4
 	JMS	I C_CRLF
+	JMP	IL SHOWREG
 	;; 
 	ENDIF
 
@@ -207,7 +229,10 @@ WSTART:
 	JMP	IL SWREG	; SW register R/W
 	TAD	L 'W'-'F'
 	SNA
-	JMP	IL FIELD	; Data Field R/W
+	JMP	IL FIELD	; Flag and Field R/W
+	TAD	L 'F'-'R'
+	SNA
+	JMP	IL REG		; show Registers
 	ENDIF
 
 ERR:
@@ -217,7 +242,71 @@ ERR:
 	JMS	I C_STROUT
 	JMP	WSTART
 
+	LTORG
+
 	IF USE_TANGNANO
+	ALIGN	128
+;;; show Registers
+REG:
+	ISZ	00017		; Inc 00017 (never skip)
+	JMS	I C_SKIPSP
+	JMS	I C_RDOCT
+	JMS	I C_SKIPSP
+	CLA
+	TAD	CH
+	SZA
+	JMP	I C_ERR
+	TAD	CNT
+	SNA
+	JMP	SHOWREG
+	CLA
+	TAD	VAL
+	DCA     S_AC
+SHOWREG:
+	TAD	L STRACC-1
+	DCA	00017
+	JMS	I C_STROUT
+	CLA
+	TAD	S_AC
+	DCA     VAL
+	JMS     I C_OCTOUT4
+
+	TAD	L STRFLG-1
+	DCA	00017
+	JMS	I C_STROUT
+	CLA
+	TAD	S_FLAGS
+	DCA     VAL
+	JMS     I C_OCTOUT4
+	JMS     I C_CRLF
+	JMP	I C_WSTART
+
+;;; Change Flag and Field
+FIELD:	
+	ISZ	00017		; Inc 00017 (never skip)
+	JMS	I C_SKIPSP
+	JMS	I C_RDOCT
+	JMS	I C_SKIPSP
+	CLA
+	TAD	CH
+	SZA
+	JMP	I C_ERR
+	TAD	CNT
+	SNA
+	JMP	FLD1
+	CLA CLL
+	TAD	VAL
+	DCA	S_FLAGS
+	TAD	S_FLAGS
+	RAL
+	RTL
+	AND	L 0070
+	TAD     L 06201		; make CDF instruction
+	DCA     .+1		; deposit it
+	NOP			; here is the instruction
+FLD1:
+	JMP	SHOWREG
+
 ;;; Switch Register
 ;;; Software writable Switch Register
 ;;; IOT_SWR 6301 (my own defined IOT instruction)
@@ -244,39 +333,8 @@ SW1:
 	JMS     I C_CRLF
 	JMP	I C_WSTART
 
-;;; Change Data Field
-FIELD:	
-	ISZ	00017		; Inc 00017 (never skip)
-	JMS	I C_SKIPSP
-	JMS	I C_RDOCT
-	JMS	I C_SKIPSP
-	CLA
-	TAD	CH
-	SZA
-	JMP	I C_ERR
-	TAD	CNT
-	SNA
-	JMP	FLD1
-	CLA CLL
-	TAD	VAL
-	RAL
-	RTL
-	AND	L 0070
-	TAD     L 06201		; make CDF instruction
-	DCA     .+1		; deposit it
-	NOP			; here is the instruction
-FLD1:
-	CLA CLL
-	RDF
-	RTR
-	RAR
-	DCA     VAL
-	JMS     I C_OCTOUT4
-	JMS     I C_CRLF
-	JMP	I C_WSTART
 	LTORG
 	ENDIF
-
 ;;; Dump memory
 
 	ALIGN	128
@@ -439,6 +497,11 @@ DPB2:
 	ISZ	FLAG		; Found end address (never skip)
 	JMP	I DPB
 
+	IF USE_CP
+	LTORG
+	ALIGN 128
+	ENDIF
+
 ;;; GO address
 
 GO:
@@ -460,6 +523,23 @@ GO:
 	;; 
 	DCA	S_PC		; overwrite saved PC
 G1:
+	;; restore context
+	TAD	S_FLAGS
+	RAL
+	RTL
+	AND	L 0070
+	TAD	L 06201		; make CDF
+	DCA	.+1		; deposit to (PC+1)
+	NOP			; here is CDF and restore DF
+	TAD	S_FLAGS
+	RAL			; restore Link
+	TAD	S_FLAGS
+	AND	L 0070
+	TAD	L 06202		; make CIF
+	DCA	.+1		; deposit to (PC+1)
+	NOP			; here is CIF and restore IF on IB
+	CLA
+	TAD	S_AC		; resotre AC
 	ION			; exit CP
 	JMP	I S_PC
 	;; 
@@ -729,7 +809,7 @@ LHI3:
 	JMP	LHIE		; Checksum error
 
 	IF USE_TANGNANO
-	JMS	I C_SHOWPROG	; show progress
+	JMS	IL OUT0017	; show progress
 	ENDIF
 
 	CLA CMA
@@ -980,14 +1060,14 @@ STRO0:
 	ENDIF ; USE_CP
 
 	IF USE_TANGNANO 	; show progress
-SHOWPROG:
+OUT0017:
 	DC	0
 	CLA
 	TAD	00017
 	DCA	VAL
 	JMS	I C_OCTOUT4
 	JMS	I C_CRLF
-	JMP	I SHOWPROG	; Return
+	JMP	I OUT0017	; Return
 	;; 
 	ENDIF
 	
@@ -1011,6 +1091,11 @@ DSEP1:
 DSEP2:
 	DC	"    " 0
 	
+	IF USE_TANGNANO
+STRACC:	DC	"AC=" 0
+STRFLG:	DC	" FLG,IF,DF=" 0
+	ENDIF
+
 	IF USE_CP
 	LTORG
 	ENDIF

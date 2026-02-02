@@ -10,3 +10,5 @@
   - universal monitorにコマンド追加(Switch register, data field)
 - 2026/02/02: HDLアップデート(version 20260202)
   - 割り込み時に拡張メモリのレジスタ(REG_IF, DF, IB)のクリアを追加
+- 2026/02/02:
+  - CP空間のuniversal monitorにコンテキストの保存復帰を実装しました．
