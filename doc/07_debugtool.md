@@ -55,3 +55,7 @@ OS/8ブート時のログの例
 9254:DCA0 ,005007,003143,000143,000000,000143,000000
 
 ```
+
+## [tools/sample](../tools/sample)
+- bootloaderやテストプログラムです．
+- universal monitorのSコマンドで書いて実行します．
