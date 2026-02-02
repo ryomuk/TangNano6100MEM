@@ -538,13 +538,16 @@ G1:
 	TAD	L 06201		; make CDF
 	DCA	.+1		; deposit to (PC+1)
 	NOP			; here is CDF and restore DF
-	TAD	S_FLAGS
-	RAL			; restore Link
+	;; 
 	TAD	S_FLAGS
 	AND	L 0070
 	TAD	L 06202		; make CIF
 	DCA	.+1		; deposit to (PC+1)
 	NOP			; here is CIF and restore IF on IB
+	;; 
+	TAD	S_FLAGS
+	RAL			; restore Link
+	;; 
 	CLA
 	TAD	S_AC		; resotre AC
 	ION			; exit CP
