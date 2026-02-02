@@ -43,6 +43,7 @@ This document is written mostly in Japanese, so please use machine translation i
 └── tools
     ├── papertape
     │   └── ptp2v.c    : 紙テープバイナリ変換用ソフト
+    ├── sample          : bootやテスト用プログラム(unimonで書く用)
     └── unimon          : Universal Monitor
         ├── im6100      : IM6100 Control Panel版
         └── LICENSE.txt : 上記のライセンスファイル
