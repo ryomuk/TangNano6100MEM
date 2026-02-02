@@ -16,7 +16,7 @@
 ```
 <LINK,0,IREQ> <IIF,IEFF,0> <IF><DF>
 ```
-意味があるのはMSBのLINKと，下2桁目のIF, DFです．
+なので，意味があるのはMSBのLINKと，下2桁目のIF, DFです．
 
 - W (sWitch): Switch Register (OSR命令で読まれる値)を設定します．
   - 物理的なパネルスイッチが無いので，FPGA上にレジスタを用意して実装しました．
