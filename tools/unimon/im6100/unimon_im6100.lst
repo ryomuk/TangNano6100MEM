@@ -1,4 +1,4 @@
- AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 1 - 2026年02月02日 19時36分18秒
+ AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 1 - 2026年02月02日 20時16分21秒
 
 
        1/       0 :                     ;;;
@@ -61,7 +61,7 @@
 (1)   26/       0 :                     ;;; Options
 (1)   27/       0 :                     ;;;
 (1)   28/       0 :                     
- AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm(config.inc) - Page 2 - 2026年02月02日 19時36分18秒
+ AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm(config.inc) - Page 2 - 2026年02月02日 20時16分21秒
 
 
 (1)   29/       0 : =01                  USE_HEXCMD = 1			; L(oad) command
@@ -124,7 +124,7 @@
       56/     100 : 005000              C_CSTART:	DC	CSTART
       57/     101 : 005046              C_WSTART:	DC 	WSTART
       58/     102 : 007423              C_CONOUT:	DC	CONOUT
- AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 3 - 2026年02月02日 19時36分18秒
+ AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 3 - 2026年02月02日 20時16分21秒
 
 
       59/     103 : 007200              C_STROUT:	DC	STROUT
@@ -187,7 +187,7 @@
      115/    5006 : 007010              	RAR
      116/    5007 : 007012              	RTR
      117/    5010 : (MACRO)              	RIF
- AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 4 - 2026年02月02日 19時36分18秒
+ AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 4 - 2026年02月02日 20時16分21秒
 
 
      117/    5010 : 006224                      DC 06224
@@ -250,7 +250,7 @@
      173/    5027 : 001322              	TAD	L OPNMSG-1
      174/    5030 : 003017              	DCA	00017
      175/    5031 : 004503              	JMS	I C_STROUT
- AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 5 - 2026年02月02日 19時36分18秒
+ AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 5 - 2026年02月02日 20時16分21秒
 
 
      176/    5032 :                     
@@ -313,7 +313,7 @@
      232/    5105 : 005742              	JMP	IL FIELD	; Flag and Field R/W
      233/    5106 : 001333              	TAD	L 'F'-'R'
      234/    5107 : 007450              	SNA
- AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 6 - 2026年02月02日 19時36分18秒
+ AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 6 - 2026年02月02日 20時16分21秒
 
 
      235/    5110 : 005743              	JMP	IL REG		; show Registers
@@ -335,8 +335,8 @@
              5132 : 006000 007764 
              5134 : 006040 000007 
              5136 : 006400 007765 
-             5140 : 005264 000021 
-             5142 : 005236 005200 
+             5140 : 005275 000021 
+             5142 : 005247 005200 
              5144 : 007321             
      246/    5145 :                     
      247/    5145 : =>TRUE               	IF USE_TANGNANO
@@ -358,909 +358,917 @@
      263/    5214 : 001146              	TAD	VAL
      264/    5215 : 003001              	DCA     S_AC
      265/    5216 :                     SHOWREG:
-     266/    5216 : 001310              	TAD	L STRACC-1
-     267/    5217 : 003017              	DCA	00017
-     268/    5220 : 004503              	JMS	I C_STROUT
-     269/    5221 : 007200              	CLA
-     270/    5222 : 001001              	TAD	S_AC
-     271/    5223 : 003146              	DCA     VAL
-     272/    5224 : 004514              	JMS     I C_OCTOUT4
-     273/    5225 :                     
-     274/    5225 : 001311              	TAD	L STRFLG-1
-     275/    5226 : 003017              	DCA	00017
-     276/    5227 : 004503              	JMS	I C_STROUT
-     277/    5230 : 007200              	CLA
-     278/    5231 : 001002              	TAD	S_FLAGS
-     279/    5232 : 003146              	DCA     VAL
-     280/    5233 : 004514              	JMS     I C_OCTOUT4
-     281/    5234 : 004515              	JMS     I C_CRLF
-     282/    5235 : 005501              	JMP	I C_WSTART
-     283/    5236 :                     
- AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 7 - 2026年02月02日 19時36分18秒
+     266/    5216 : 007200              	CLA
+     267/    5217 :                     	;; AC
+     268/    5217 : 001314              	TAD	L STRACC-1
+     269/    5220 : 003017              	DCA	00017
+     270/    5221 : 004503              	JMS	I C_STROUT
+     271/    5222 : 007200              	CLA
+     272/    5223 : 001001              	TAD	S_AC
+     273/    5224 : 003146              	DCA     VAL
+     274/    5225 : 004514              	JMS     I C_OCTOUT4
+     275/    5226 :                     	;; Flags and Fields
+     276/    5226 : 001315              	TAD	L STRFLG-1
+     277/    5227 : 003017              	DCA	00017
+     278/    5230 : 004503              	JMS	I C_STROUT
+     279/    5231 : 007200              	CLA
+     280/    5232 : 001002              	TAD	S_FLAGS
+     281/    5233 : 003146              	DCA     VAL
+     282/    5234 : 004514              	JMS     I C_OCTOUT4
+     283/    5235 :                     	;; Switch Register
+ AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 7 - 2026年02月02日 20時16分21秒
 
 
-     284/    5236 :                     ;;; Change Flag and Field
-     285/    5236 :                     FIELD:	
-     286/    5236 : 002017              	ISZ	00017		; Inc 00017 (never skip)
-     287/    5237 : 004510              	JMS	I C_SKIPSP
-     288/    5240 : 004512              	JMS	I C_RDOCT
-     289/    5241 : 004510              	JMS	I C_SKIPSP
-     290/    5242 : 007200              	CLA
-     291/    5243 : 001144              	TAD	CH
-     292/    5244 : 007440              	SZA
-     293/    5245 : 005507              	JMP	I C_ERR
-     294/    5246 : 001145              	TAD	CNT
-     295/    5247 : 007450              	SNA
-     296/    5250 : 005263              	JMP	FLD1
-     297/    5251 : 007300              	CLA CLL
-     298/    5252 : 001146              	TAD	VAL
-     299/    5253 : 003002              	DCA	S_FLAGS
-     300/    5254 : 001002              	TAD	S_FLAGS
-     301/    5255 : 007004              	RAL
-     302/    5256 : 007006              	RTL
-     303/    5257 : 000312              	AND	L 0070
-     304/    5260 : 001313              	TAD     L 06201		; make CDF instruction
-     305/    5261 : 003262              	DCA     .+1		; deposit it
-     306/    5262 : 007000              	NOP			; here is the instruction
-     307/    5263 :                     FLD1:
-     308/    5263 : 005216              	JMP	SHOWREG
-     309/    5264 :                     
-     310/    5264 :                     ;;; Switch Register
-     311/    5264 :                     ;;; Software writable Switch Register
-     312/    5264 :                     ;;; IOT_SWR 6301 (my own defined IOT instruction)
-     313/    5264 :                     SWREG:	
-     314/    5264 : 002017              	ISZ	00017		; Inc 00017 (never skip)
-     315/    5265 : 004510              	JMS	I C_SKIPSP
-     316/    5266 : 004512              	JMS	I C_RDOCT
-     317/    5267 : 004510              	JMS	I C_SKIPSP
-     318/    5270 : 007200              	CLA
-     319/    5271 : 001144              	TAD	CH
-     320/    5272 : 007440              	SZA
-     321/    5273 : 005507              	JMP	I C_ERR
-     322/    5274 : 001145              	TAD	CNT
-     323/    5275 : 007450              	SNA
-     324/    5276 : 005302              	JMP	SW1
-     325/    5277 : 007200              	CLA
-     326/    5300 : 001146              	TAD	VAL
-     327/    5301 : 006301              	DC 006301		; IOT_6301
-     328/    5302 :                     SW1:
-     329/    5302 : 007200              	CLA
-     330/    5303 : 007404              	OSR
-     331/    5304 : 003146              	DCA     VAL
-     332/    5305 : 004514              	JMS     I C_OCTOUT4
-     333/    5306 : 004515              	JMS     I C_CRLF
-     334/    5307 : 005501              	JMP	I C_WSTART
-     335/    5310 :                     
-     336/    5310 : 007345 007351       	LTORG
-             5312 : 000070 006201     
-     337/    5314 : [247]                	ENDIF
-     338/    5314 :                     ;;; Dump memory
-     339/    5314 :                     
-     340/    5314 :                     	ALIGN	128
-     341/    5400 :                     
-     342/    5400 :                     DUMP:
- AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 8 - 2026年02月02日 19時36分18秒
+     284/    5235 : 001316              	TAD	L STRSR-1
+     285/    5236 : 003017              	DCA	00017
+     286/    5237 : 004503              	JMS	I C_STROUT
+     287/    5240 : 007200              	CLA
+     288/    5241 : 007404              	OSR
+     289/    5242 : 003146              	DCA     VAL
+     290/    5243 : 004514              	JMS     I C_OCTOUT4
+     291/    5244 : 004515              	JMS     I C_CRLF
+     292/    5245 : 005501              	JMP	I C_WSTART
+     293/    5246 :                     
+     294/    5246 : 005501              	JMP	I C_WSTART
+     295/    5247 :                     
+     296/    5247 :                     ;;; Change Flag and Field
+     297/    5247 :                     FIELD:	
+     298/    5247 : 002017              	ISZ	00017		; Inc 00017 (never skip)
+     299/    5250 : 004510              	JMS	I C_SKIPSP
+     300/    5251 : 004512              	JMS	I C_RDOCT
+     301/    5252 : 004510              	JMS	I C_SKIPSP
+     302/    5253 : 007200              	CLA
+     303/    5254 : 001144              	TAD	CH
+     304/    5255 : 007440              	SZA
+     305/    5256 : 005507              	JMP	I C_ERR
+     306/    5257 : 001145              	TAD	CNT
+     307/    5260 : 007450              	SNA
+     308/    5261 : 005274              	JMP	FLD1
+     309/    5262 : 007300              	CLA CLL
+     310/    5263 : 001146              	TAD	VAL
+     311/    5264 : 003002              	DCA	S_FLAGS
+     312/    5265 : 001002              	TAD	S_FLAGS
+     313/    5266 : 007004              	RAL
+     314/    5267 : 007006              	RTL
+     315/    5270 : 000317              	AND	L 0070
+     316/    5271 : 001320              	TAD     L 06201		; make CDF instruction
+     317/    5272 : 003273              	DCA     .+1		; deposit it
+     318/    5273 : 007000              	NOP			; here is the instruction
+     319/    5274 :                     FLD1:
+     320/    5274 : 005216              	JMP	SHOWREG
+     321/    5275 :                     
+     322/    5275 :                     ;;; Switch Register
+     323/    5275 :                     ;;; Software writable Switch Register
+     324/    5275 :                     ;;; IOT_SWR 6301 (my own defined IOT instruction)
+     325/    5275 :                     SWREG:	
+     326/    5275 : 002017              	ISZ	00017		; Inc 00017 (never skip)
+     327/    5276 : 004510              	JMS	I C_SKIPSP
+     328/    5277 : 004512              	JMS	I C_RDOCT
+     329/    5300 : 004510              	JMS	I C_SKIPSP
+     330/    5301 : 007200              	CLA
+     331/    5302 : 001144              	TAD	CH
+     332/    5303 : 007440              	SZA
+     333/    5304 : 005507              	JMP	I C_ERR
+     334/    5305 : 001145              	TAD	CNT
+     335/    5306 : 007450              	SNA
+     336/    5307 : 005313              	JMP	SW1
+     337/    5310 : 007200              	CLA
+     338/    5311 : 001146              	TAD	VAL
+     339/    5312 : 006301              	DC 006301		; IOT_6301
+     340/    5313 :                     SW1:
+     341/    5313 : 005216              	JMP SHOWREG
+     342/    5314 :                     	
+     343/    5314 : 007345 007351       	LTORG
+ AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 8 - 2026年02月02日 20時16分21秒
 
 
-     343/    5400 : 002017              	ISZ	00017		; Inc 00017 (never skip)
-     344/    5401 : 004510              	JMS	I C_SKIPSP
-     345/    5402 : 004512              	JMS	I C_RDOCT
-     346/    5403 : 007200              	CLA
-     347/    5404 : 001145              	TAD	CNT
-     348/    5405 : 007440              	SZA
-     349/    5406 : 005220              	JMP	DP0
-     350/    5407 :                     	;; No arg.
-     351/    5407 : 004510              	JMS	I C_SKIPSP
-     352/    5410 : 007200              	CLA
-     353/    5411 : 001144              	TAD	CH
-     354/    5412 : 007440              	SZA
-     355/    5413 : 005507              	JMP	I C_ERR
-     356/    5414 : 001140              	TAD	DSADDR
-     357/    5415 : 001332              	TAD	L 64
-     358/    5416 : 003141              	DCA	DEADDR
-     359/    5417 : 005260              	JMP	DPM
-     360/    5420 :                     
-     361/    5420 :                     	;; 1st arg. found
-     362/    5420 :                     DP0:
-     363/    5420 : 007200              	CLA
-     364/    5421 : 001146              	TAD	VAL
-     365/    5422 : 003140              	DCA	DSADDR
-     366/    5423 : 004510              	JMS	I C_SKIPSP
-     367/    5424 : 007200              	CLA
-     368/    5425 : 001144              	TAD	CH
-     369/    5426 : 001333              	TAD	L -','
-     370/    5427 : 007450              	SNA
-     371/    5430 : 005241              	JMP	DP1
-     372/    5431 : 001334              	TAD	L ','
-     373/    5432 : 007440              	SZA
-     374/    5433 : 005507              	JMP	I C_ERR
-     375/    5434 :                     	;; No 2nd arg.
-     376/    5434 : 007200              	CLA
-     377/    5435 : 001140              	TAD	DSADDR
-     378/    5436 : 001332              	TAD	L 64
-     379/    5437 : 003141              	DCA	DEADDR
-     380/    5440 : 005260              	JMP	DPM
-     381/    5441 :                     DP1:
-     382/    5441 : 002017              	ISZ	00017		; Inc 00017 (never skip)
-     383/    5442 : 004510              	JMS	I C_SKIPSP
-     384/    5443 : 004512              	JMS	I C_RDOCT
-     385/    5444 : 004510              	JMS	I C_SKIPSP
-     386/    5445 : 007200              	CLA
-     387/    5446 : 001145              	TAD	CNT
-     388/    5447 : 007450              	SNA
-     389/    5450 : 005507              	JMP	I C_ERR
-     390/    5451 : 007200              	CLA
-     391/    5452 : 001144              	TAD	CH
-     392/    5453 : 007440              	SZA
-     393/    5454 : 005507              	JMP	I C_ERR
-     394/    5455 : 007001              	IAC
-     395/    5456 : 001146              	TAD	VAL
-     396/    5457 : 003141              	DCA	DEADDR
-     397/    5460 :                     
-     398/    5460 :                     DPM:
-     399/    5460 : 007200              	CLA
-     400/    5461 : 001140              	TAD	DSADDR
-     401/    5462 : 000335              	AND	L 07770
-     402/    5463 : 001336              	TAD	L -1
- AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 9 - 2026年02月02日 19時36分18秒
+             5316 : 007365 000070 
+             5320 : 006201             
+     344/    5321 : [247]                	ENDIF
+     345/    5321 :                     ;;; Dump memory
+     346/    5321 :                     
+     347/    5321 :                     	ALIGN	128
+     348/    5400 :                     
+     349/    5400 :                     DUMP:
+     350/    5400 : 002017              	ISZ	00017		; Inc 00017 (never skip)
+     351/    5401 : 004510              	JMS	I C_SKIPSP
+     352/    5402 : 004512              	JMS	I C_RDOCT
+     353/    5403 : 007200              	CLA
+     354/    5404 : 001145              	TAD	CNT
+     355/    5405 : 007440              	SZA
+     356/    5406 : 005220              	JMP	DP0
+     357/    5407 :                     	;; No arg.
+     358/    5407 : 004510              	JMS	I C_SKIPSP
+     359/    5410 : 007200              	CLA
+     360/    5411 : 001144              	TAD	CH
+     361/    5412 : 007440              	SZA
+     362/    5413 : 005507              	JMP	I C_ERR
+     363/    5414 : 001140              	TAD	DSADDR
+     364/    5415 : 001332              	TAD	L 64
+     365/    5416 : 003141              	DCA	DEADDR
+     366/    5417 : 005260              	JMP	DPM
+     367/    5420 :                     
+     368/    5420 :                     	;; 1st arg. found
+     369/    5420 :                     DP0:
+     370/    5420 : 007200              	CLA
+     371/    5421 : 001146              	TAD	VAL
+     372/    5422 : 003140              	DCA	DSADDR
+     373/    5423 : 004510              	JMS	I C_SKIPSP
+     374/    5424 : 007200              	CLA
+     375/    5425 : 001144              	TAD	CH
+     376/    5426 : 001333              	TAD	L -','
+     377/    5427 : 007450              	SNA
+     378/    5430 : 005241              	JMP	DP1
+     379/    5431 : 001334              	TAD	L ','
+     380/    5432 : 007440              	SZA
+     381/    5433 : 005507              	JMP	I C_ERR
+     382/    5434 :                     	;; No 2nd arg.
+     383/    5434 : 007200              	CLA
+     384/    5435 : 001140              	TAD	DSADDR
+     385/    5436 : 001332              	TAD	L 64
+     386/    5437 : 003141              	DCA	DEADDR
+     387/    5440 : 005260              	JMP	DPM
+     388/    5441 :                     DP1:
+     389/    5441 : 002017              	ISZ	00017		; Inc 00017 (never skip)
+     390/    5442 : 004510              	JMS	I C_SKIPSP
+     391/    5443 : 004512              	JMS	I C_RDOCT
+     392/    5444 : 004510              	JMS	I C_SKIPSP
+     393/    5445 : 007200              	CLA
+     394/    5446 : 001145              	TAD	CNT
+     395/    5447 : 007450              	SNA
+     396/    5450 : 005507              	JMP	I C_ERR
+     397/    5451 : 007200              	CLA
+     398/    5452 : 001144              	TAD	CH
+     399/    5453 : 007440              	SZA
+     400/    5454 : 005507              	JMP	I C_ERR
+     401/    5455 : 007001              	IAC
+ AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 9 - 2026年02月02日 20時16分21秒
 
 
-     403/    5464 : 003016              	DCA	00016
-     404/    5465 : 003147              	DCA	FLAG		; Clear DSTATE (FLAG)
-     405/    5466 :                     DPM0:
-     406/    5466 : 004311              	JMS	DPL
-     407/    5467 : 004505              	JMS	I C_CONST
-     408/    5470 : 007200              	CLA
-     409/    5471 : 001144              	TAD	CH
-     410/    5472 : 007440              	SZA
-     411/    5473 : 005304              	JMP	DPM1
-     412/    5474 : 001147              	TAD	FLAG
-     413/    5475 : 001337              	TAD	L -2
-     414/    5476 : 007510              	SPA
-     415/    5477 : 005266              	JMP	DPM0
-     416/    5500 : 007200              	CLA
-     417/    5501 : 001141              	TAD	DEADDR
-     418/    5502 : 003140              	DCA	DSADDR
-     419/    5503 : 005501              	JMP	I C_WSTART
-     420/    5504 :                     DPM1:
-     421/    5504 : 007200              	CLA
-     422/    5505 : 001016              	TAD	00016
-     423/    5506 : 003140              	DCA	DSADDR
-     424/    5507 : 004504              	JMS	I C_CONIN
-     425/    5510 : 005501              	JMP	I C_WSTART
-     426/    5511 :                     
-     427/    5511 :                     DPL:
-     428/    5511 : 000000              	DC	0
-     429/    5512 :                     	;; DUMP line
-     430/    5512 : 007200              	CLA
-     431/    5513 : 001016              	TAD	00016
-     432/    5514 : 007001              	IAC
-     433/    5515 : 003146              	DCA	VAL
-     434/    5516 : 004514              	JMS	I C_OCTOUT4
-     435/    5517 : 001340              	TAD	L DSEP0-1
-     436/    5520 : 003017              	DCA	00017
-     437/    5521 : 004503              	JMS	I C_STROUT
-     438/    5522 : 007200              	CLA
-     439/    5523 : 001335              	TAD	L -8
-     440/    5524 : 003145              	DCA	CNT
-     441/    5525 :                     DPL0:
-     442/    5525 : 004741              	JMS	IL DPB
-     443/    5526 : 002145              	ISZ	CNT
-     444/    5527 : 005325              	JMP	DPL0
-     445/    5530 : 004515              	JMS	I C_CRLF
-     446/    5531 : 005711              	JMP	I DPL
-     447/    5532 :                     
-     448/    5532 : 000100 007724       	LTORG
+     402/    5456 : 001146              	TAD	VAL
+     403/    5457 : 003141              	DCA	DEADDR
+     404/    5460 :                     
+     405/    5460 :                     DPM:
+     406/    5460 : 007200              	CLA
+     407/    5461 : 001140              	TAD	DSADDR
+     408/    5462 : 000335              	AND	L 07770
+     409/    5463 : 001336              	TAD	L -1
+     410/    5464 : 003016              	DCA	00016
+     411/    5465 : 003147              	DCA	FLAG		; Clear DSTATE (FLAG)
+     412/    5466 :                     DPM0:
+     413/    5466 : 004311              	JMS	DPL
+     414/    5467 : 004505              	JMS	I C_CONST
+     415/    5470 : 007200              	CLA
+     416/    5471 : 001144              	TAD	CH
+     417/    5472 : 007440              	SZA
+     418/    5473 : 005304              	JMP	DPM1
+     419/    5474 : 001147              	TAD	FLAG
+     420/    5475 : 001337              	TAD	L -2
+     421/    5476 : 007510              	SPA
+     422/    5477 : 005266              	JMP	DPM0
+     423/    5500 : 007200              	CLA
+     424/    5501 : 001141              	TAD	DEADDR
+     425/    5502 : 003140              	DCA	DSADDR
+     426/    5503 : 005501              	JMP	I C_WSTART
+     427/    5504 :                     DPM1:
+     428/    5504 : 007200              	CLA
+     429/    5505 : 001016              	TAD	00016
+     430/    5506 : 003140              	DCA	DSADDR
+     431/    5507 : 004504              	JMS	I C_CONIN
+     432/    5510 : 005501              	JMP	I C_WSTART
+     433/    5511 :                     
+     434/    5511 :                     DPL:
+     435/    5511 : 000000              	DC	0
+     436/    5512 :                     	;; DUMP line
+     437/    5512 : 007200              	CLA
+     438/    5513 : 001016              	TAD	00016
+     439/    5514 : 007001              	IAC
+     440/    5515 : 003146              	DCA	VAL
+     441/    5516 : 004514              	JMS	I C_OCTOUT4
+     442/    5517 : 001340              	TAD	L DSEP0-1
+     443/    5520 : 003017              	DCA	00017
+     444/    5521 : 004503              	JMS	I C_STROUT
+     445/    5522 : 007200              	CLA
+     446/    5523 : 001335              	TAD	L -8
+     447/    5524 : 003145              	DCA	CNT
+     448/    5525 :                     DPL0:
+     449/    5525 : 004741              	JMS	IL DPB
+     450/    5526 : 002145              	ISZ	CNT
+     451/    5527 : 005325              	JMP	DPL0
+     452/    5530 : 004515              	JMS	I C_CRLF
+     453/    5531 : 005711              	JMP	I DPL
+     454/    5532 :                     
+     455/    5532 : 000100 007724       	LTORG
              5534 : 000054 007770 
              5536 : 007777 007776 
              5540 : 007331 005600     
-     449/    5542 :                     
-     450/    5542 :                     	ALIGN	128
-     451/    5600 :                     
-     452/    5600 :                     DPB:
-     453/    5600 : 000000              	DC	0
-     454/    5601 :                     	;; DUMP byte
-     455/    5601 : 007200              	CLA
-     456/    5602 : 001246              	TAD	L ' '
-     457/    5603 : 003144              	DCA	CH
-     458/    5604 : 004502              	JMS	I C_CONOUT
-     459/    5605 : 007200              	CLA
- AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 10 - 2026年02月02日 19時36分18秒
+     456/    5542 :                     
+     457/    5542 :                     	ALIGN	128
+     458/    5600 :                     
+ AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 10 - 2026年02月02日 20時16分21秒
 
 
-     460/    5606 : 001147              	TAD	FLAG
-     461/    5607 : 007440              	SZA
-     462/    5610 : 005230              	JMP	DPB2
-     463/    5611 :                     	;; Dump state 0
-     464/    5611 : 001016              	TAD	00016		; AC = addr - 1
-     465/    5612 : 007040              	CMA			; AC = - (addr - 1) - 1 = - addr
-     466/    5613 : 001140              	TAD	DSADDR
-     467/    5614 : 007450              	SNA
-     468/    5615 : 005227              	JMP	DPB1
-     469/    5616 :                     DPB0:
-     470/    5616 :                     	;; Still 0 or 2
-     471/    5616 : 007200              	CLA
-     472/    5617 : 001247              	TAD	L DSEP2-1
-     473/    5620 : 003017              	DCA	00017
-     474/    5621 : 004503              	JMS	I C_STROUT
-     475/    5622 : 007200              	CLA
-     476/    5623 : 001016              	TAD	00016
-     477/    5624 : 007001              	IAC			; Inc 00016 (Don't want to access memory)
-     478/    5625 : 003016              	DCA	00016
-     479/    5626 : 005600              	JMP	I DPB
-     480/    5627 :                     DPB1:
-     481/    5627 :                     	;; Found start address
-     482/    5627 : 002147              	ISZ	FLAG		; never skip
-     483/    5630 :                     DPB2:
-     484/    5630 : 007240              	CLA CMA
-     485/    5631 : 001147              	TAD	FLAG
-     486/    5632 : 007440              	SZA
-     487/    5633 : 005216              	JMP	DPB0		; State 2
-     488/    5634 :                     	;; Dump state 1
-     489/    5634 : 007200              	CLA
-     490/    5635 : 001416              	TAD	I 00016		; OK. This is Main Memory
-     491/    5636 : 003146              	DCA	VAL
-     492/    5637 : 004514              	JMS	I C_OCTOUT4
-     493/    5640 : 001016              	TAD	00016		; AC = addr - 1
-     494/    5641 : 007040              	CMA			; AC = - (addr - 1) - 1 = - addr
-     495/    5642 : 001141              	TAD	DEADDR
-     496/    5643 : 007450              	SNA
-     497/    5644 : 002147              	ISZ	FLAG		; Found end address (never skip)
-     498/    5645 : 005600              	JMP	I DPB
-     499/    5646 :                     
-     500/    5646 : =>TRUE               	IF USE_CP
-     501/    5646 : 000040 007340       	LTORG
-     502/    5650 :                     	ALIGN 128
-     503/    6000 : [500]                	ENDIF
-     504/    6000 :                     
-     505/    6000 :                     ;;; GO address
-     506/    6000 :                     
-     507/    6000 :                     GO:
-     508/    6000 : 002017              	ISZ	00017		; Inc 00017 (never skip)
-     509/    6001 : 004510              	JMS	I C_SKIPSP
-     510/    6002 : 004512              	JMS	I C_RDOCT
-     511/    6003 : 004510              	JMS	I C_SKIPSP
-     512/    6004 : 007200              	CLA
-     513/    6005 : 001144              	TAD	CH
-     514/    6006 : 007440              	SZA
-     515/    6007 : 005507              	JMP	I C_ERR
-     516/    6010 : 001145              	TAD	CNT
-     517/    6011 : 007450              	SNA
-     518/    6012 : 005216              	JMP	G1
-     519/    6013 : 007200              	CLA
- AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 11 - 2026年02月02日 19時36分18秒
+     459/    5600 :                     DPB:
+     460/    5600 : 000000              	DC	0
+     461/    5601 :                     	;; DUMP byte
+     462/    5601 : 007200              	CLA
+     463/    5602 : 001246              	TAD	L ' '
+     464/    5603 : 003144              	DCA	CH
+     465/    5604 : 004502              	JMS	I C_CONOUT
+     466/    5605 : 007200              	CLA
+     467/    5606 : 001147              	TAD	FLAG
+     468/    5607 : 007440              	SZA
+     469/    5610 : 005230              	JMP	DPB2
+     470/    5611 :                     	;; Dump state 0
+     471/    5611 : 001016              	TAD	00016		; AC = addr - 1
+     472/    5612 : 007040              	CMA			; AC = - (addr - 1) - 1 = - addr
+     473/    5613 : 001140              	TAD	DSADDR
+     474/    5614 : 007450              	SNA
+     475/    5615 : 005227              	JMP	DPB1
+     476/    5616 :                     DPB0:
+     477/    5616 :                     	;; Still 0 or 2
+     478/    5616 : 007200              	CLA
+     479/    5617 : 001247              	TAD	L DSEP2-1
+     480/    5620 : 003017              	DCA	00017
+     481/    5621 : 004503              	JMS	I C_STROUT
+     482/    5622 : 007200              	CLA
+     483/    5623 : 001016              	TAD	00016
+     484/    5624 : 007001              	IAC			; Inc 00016 (Don't want to access memory)
+     485/    5625 : 003016              	DCA	00016
+     486/    5626 : 005600              	JMP	I DPB
+     487/    5627 :                     DPB1:
+     488/    5627 :                     	;; Found start address
+     489/    5627 : 002147              	ISZ	FLAG		; never skip
+     490/    5630 :                     DPB2:
+     491/    5630 : 007240              	CLA CMA
+     492/    5631 : 001147              	TAD	FLAG
+     493/    5632 : 007440              	SZA
+     494/    5633 : 005216              	JMP	DPB0		; State 2
+     495/    5634 :                     	;; Dump state 1
+     496/    5634 : 007200              	CLA
+     497/    5635 : 001416              	TAD	I 00016		; OK. This is Main Memory
+     498/    5636 : 003146              	DCA	VAL
+     499/    5637 : 004514              	JMS	I C_OCTOUT4
+     500/    5640 : 001016              	TAD	00016		; AC = addr - 1
+     501/    5641 : 007040              	CMA			; AC = - (addr - 1) - 1 = - addr
+     502/    5642 : 001141              	TAD	DEADDR
+     503/    5643 : 007450              	SNA
+     504/    5644 : 002147              	ISZ	FLAG		; Found end address (never skip)
+     505/    5645 : 005600              	JMP	I DPB
+     506/    5646 :                     
+     507/    5646 : =>TRUE               	IF USE_CP
+     508/    5646 : 000040 007340       	LTORG
+     509/    5650 :                     	ALIGN 128
+     510/    6000 : [507]                	ENDIF
+     511/    6000 :                     
+     512/    6000 :                     ;;; GO address
+     513/    6000 :                     
+     514/    6000 :                     GO:
+     515/    6000 : 002017              	ISZ	00017		; Inc 00017 (never skip)
+     516/    6001 : 004510              	JMS	I C_SKIPSP
+     517/    6002 : 004512              	JMS	I C_RDOCT
+     518/    6003 : 004510              	JMS	I C_SKIPSP
+ AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 11 - 2026年02月02日 20時16分21秒
 
 
-     520/    6014 : 001146              	TAD	VAL
-     521/    6015 :                     
-     522/    6015 : =>TRUE               	IF USE_CP
-     523/    6015 :                     	;; 
-     524/    6015 : 003000              	DCA	S_PC		; overwrite saved PC
-     525/    6016 :                     G1:
-     526/    6016 :                     	;; restore context
-     527/    6016 : 001002              	TAD	S_FLAGS
-     528/    6017 : 007004              	RAL
-     529/    6020 : 007006              	RTL
-     530/    6021 : 000340              	AND	L 0070
-     531/    6022 : 001341              	TAD	L 06201		; make CDF
-     532/    6023 : 003224              	DCA	.+1		; deposit to (PC+1)
-     533/    6024 : 007000              	NOP			; here is CDF and restore DF
-     534/    6025 : 001002              	TAD	S_FLAGS
-     535/    6026 : 007004              	RAL			; restore Link
-     536/    6027 : 001002              	TAD	S_FLAGS
-     537/    6030 : 000340              	AND	L 0070
-     538/    6031 : 001342              	TAD	L 06202		; make CIF
-     539/    6032 : 003233              	DCA	.+1		; deposit to (PC+1)
-     540/    6033 : 007000              	NOP			; here is CIF and restore IF on IB
-     541/    6034 : 007200              	CLA
-     542/    6035 : 001001              	TAD	S_AC		; resotre AC
-     543/    6036 : 006001              	ION			; exit CP
-     544/    6037 : 005400              	JMP	I S_PC
-     545/    6040 :                     	;; 
-     546/    6040 : =>FALSE              	ELSE ; not USE_CP
-     547/    6040 :                     	DCA	GADDR
-     548/    6040 :                     G1:
-     549/    6040 :                     	JMP	I GADDR
-     550/    6040 : [522]                	ENDIF ; USE_CP
-     551/    6040 :                     
-     552/    6040 :                     ;;; SET memory
-     553/    6040 :                     
-     554/    6040 :                     SETM:
-     555/    6040 : 002017              	ISZ	00017		; Inc 00017 (never skip)
-     556/    6041 : 004510              	JMS	I C_SKIPSP
-     557/    6042 : 004512              	JMS	I C_RDOCT
-     558/    6043 : 004510              	JMS	I C_SKIPSP
-     559/    6044 : 007200              	CLA
-     560/    6045 : 001144              	TAD	CH
-     561/    6046 : 007440              	SZA
-     562/    6047 : 005507              	JMP	I C_ERR
-     563/    6050 : 001145              	TAD	CNT
-     564/    6051 : 007450              	SNA
-     565/    6052 : 005256              	JMP	SM0
-     566/    6053 : 007200              	CLA
-     567/    6054 : 001146              	TAD	VAL
-     568/    6055 : 003142              	DCA	SADDR
-     569/    6056 :                     SM0:
-     570/    6056 :                     SM1:
-     571/    6056 : 007200              	CLA
-     572/    6057 : 001142              	TAD	SADDR
-     573/    6060 : 003146              	DCA	VAL
-     574/    6061 : 004514              	JMS	I C_OCTOUT4
-     575/    6062 : 007200              	CLA
-     576/    6063 : 001343              	TAD	L DSEP1-1
-     577/    6064 : 003017              	DCA	00017
-     578/    6065 : 004503              	JMS	I C_STROUT
-     579/    6066 : 007200              	CLA
- AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 12 - 2026年02月02日 19時36分18秒
+     519/    6004 : 007200              	CLA
+     520/    6005 : 001144              	TAD	CH
+     521/    6006 : 007440              	SZA
+     522/    6007 : 005507              	JMP	I C_ERR
+     523/    6010 : 001145              	TAD	CNT
+     524/    6011 : 007450              	SNA
+     525/    6012 : 005216              	JMP	G1
+     526/    6013 : 007200              	CLA
+     527/    6014 : 001146              	TAD	VAL
+     528/    6015 :                     
+     529/    6015 : =>TRUE               	IF USE_CP
+     530/    6015 :                     	;; 
+     531/    6015 : 003000              	DCA	S_PC		; overwrite saved PC
+     532/    6016 :                     G1:
+     533/    6016 :                     	;; restore context
+     534/    6016 : 001002              	TAD	S_FLAGS
+     535/    6017 : 007004              	RAL
+     536/    6020 : 007006              	RTL
+     537/    6021 : 000340              	AND	L 0070
+     538/    6022 : 001341              	TAD	L 06201		; make CDF
+     539/    6023 : 003224              	DCA	.+1		; deposit to (PC+1)
+     540/    6024 : 007000              	NOP			; here is CDF and restore DF
+     541/    6025 : 001002              	TAD	S_FLAGS
+     542/    6026 : 007004              	RAL			; restore Link
+     543/    6027 : 001002              	TAD	S_FLAGS
+     544/    6030 : 000340              	AND	L 0070
+     545/    6031 : 001342              	TAD	L 06202		; make CIF
+     546/    6032 : 003233              	DCA	.+1		; deposit to (PC+1)
+     547/    6033 : 007000              	NOP			; here is CIF and restore IF on IB
+     548/    6034 : 007200              	CLA
+     549/    6035 : 001001              	TAD	S_AC		; resotre AC
+     550/    6036 : 006001              	ION			; exit CP
+     551/    6037 : 005400              	JMP	I S_PC
+     552/    6040 :                     	;; 
+     553/    6040 : =>FALSE              	ELSE ; not USE_CP
+     554/    6040 :                     	DCA	GADDR
+     555/    6040 :                     G1:
+     556/    6040 :                     	JMP	I GADDR
+     557/    6040 : [529]                	ENDIF ; USE_CP
+     558/    6040 :                     
+     559/    6040 :                     ;;; SET memory
+     560/    6040 :                     
+     561/    6040 :                     SETM:
+     562/    6040 : 002017              	ISZ	00017		; Inc 00017 (never skip)
+     563/    6041 : 004510              	JMS	I C_SKIPSP
+     564/    6042 : 004512              	JMS	I C_RDOCT
+     565/    6043 : 004510              	JMS	I C_SKIPSP
+     566/    6044 : 007200              	CLA
+     567/    6045 : 001144              	TAD	CH
+     568/    6046 : 007440              	SZA
+     569/    6047 : 005507              	JMP	I C_ERR
+     570/    6050 : 001145              	TAD	CNT
+     571/    6051 : 007450              	SNA
+     572/    6052 : 005256              	JMP	SM0
+     573/    6053 : 007200              	CLA
+     574/    6054 : 001146              	TAD	VAL
+     575/    6055 : 003142              	DCA	SADDR
+     576/    6056 :                     SM0:
+     577/    6056 :                     SM1:
+     578/    6056 : 007200              	CLA
+ AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 12 - 2026年02月02日 20時16分21秒
 
 
-     580/    6067 : 001542              	TAD	I SADDR		; OK. This is Main Memory
-     581/    6070 : 003146              	DCA	VAL
-     582/    6071 : 004514              	JMS	I C_OCTOUT4
-     583/    6072 : 007200              	CLA
-     584/    6073 : 001344              	TAD	L ' '
-     585/    6074 : 003144              	DCA	CH
-     586/    6075 : 004502              	JMS	I C_CONOUT
-     587/    6076 : 004513              	JMS	I C_GETLIN
-     588/    6077 : 007200              	CLA
-     589/    6100 : 001345              	TAD	L INBUF-1
-     590/    6101 : 003017              	DCA	00017
-     591/    6102 : 004510              	JMS	I C_SKIPSP
-     592/    6103 : 007200              	CLA
-     593/    6104 : 001144              	TAD	CH
-     594/    6105 : 007440              	SZA
-     595/    6106 : 005312              	JMP	SM2
-     596/    6107 :                     	;; Empty (Increment address)
-     597/    6107 : 002142              	ISZ	SADDR
-     598/    6110 : 007000              	NOP
-     599/    6111 : 005256              	JMP	SM1
-     600/    6112 :                     SM2:
-     601/    6112 : 001346              	TAD	L -'-'
-     602/    6113 : 007440              	SZA
-     603/    6114 : 005321              	JMP	SM3
-     604/    6115 :                     	;; '-' (Decrement address)
-     605/    6115 : 007240              	CLA CMA
-     606/    6116 : 001142              	TAD	SADDR
-     607/    6117 : 003142              	DCA	SADDR
-     608/    6120 : 005256              	JMP	SM1
-     609/    6121 :                     SM3:
-     610/    6121 : 001347              	TAD	L '-'-'.'
-     611/    6122 : 007440              	SZA
-     612/    6123 : 005325              	JMP	SM4
-     613/    6124 :                     	;; '.' (Quit)
-     614/    6124 : 005501              	JMP	I C_WSTART
-     615/    6125 :                     SM4:
-     616/    6125 : 004512              	JMS	I C_RDOCT
-     617/    6126 : 007200              	CLA
-     618/    6127 : 001145              	TAD	CNT
-     619/    6130 : 007450              	SNA
-     620/    6131 : 005507              	JMP	I C_ERR
-     621/    6132 : 007200              	CLA
-     622/    6133 : 001146              	TAD	VAL
-     623/    6134 : 003542              	DCA	I SADDR		; OK. This is Main Memory
-     624/    6135 : 002142              	ISZ	SADDR
-     625/    6136 : 007000              	NOP
-     626/    6137 : 005256              	JMP	SM1
-     627/    6140 :                     
-     628/    6140 : 000070 006201       	LTORG
+     579/    6057 : 001142              	TAD	SADDR
+     580/    6060 : 003146              	DCA	VAL
+     581/    6061 : 004514              	JMS	I C_OCTOUT4
+     582/    6062 : 007200              	CLA
+     583/    6063 : 001343              	TAD	L DSEP1-1
+     584/    6064 : 003017              	DCA	00017
+     585/    6065 : 004503              	JMS	I C_STROUT
+     586/    6066 : 007200              	CLA
+     587/    6067 : 001542              	TAD	I SADDR		; OK. This is Main Memory
+     588/    6070 : 003146              	DCA	VAL
+     589/    6071 : 004514              	JMS	I C_OCTOUT4
+     590/    6072 : 007200              	CLA
+     591/    6073 : 001344              	TAD	L ' '
+     592/    6074 : 003144              	DCA	CH
+     593/    6075 : 004502              	JMS	I C_CONOUT
+     594/    6076 : 004513              	JMS	I C_GETLIN
+     595/    6077 : 007200              	CLA
+     596/    6100 : 001345              	TAD	L INBUF-1
+     597/    6101 : 003017              	DCA	00017
+     598/    6102 : 004510              	JMS	I C_SKIPSP
+     599/    6103 : 007200              	CLA
+     600/    6104 : 001144              	TAD	CH
+     601/    6105 : 007440              	SZA
+     602/    6106 : 005312              	JMP	SM2
+     603/    6107 :                     	;; Empty (Increment address)
+     604/    6107 : 002142              	ISZ	SADDR
+     605/    6110 : 007000              	NOP
+     606/    6111 : 005256              	JMP	SM1
+     607/    6112 :                     SM2:
+     608/    6112 : 001346              	TAD	L -'-'
+     609/    6113 : 007440              	SZA
+     610/    6114 : 005321              	JMP	SM3
+     611/    6115 :                     	;; '-' (Decrement address)
+     612/    6115 : 007240              	CLA CMA
+     613/    6116 : 001142              	TAD	SADDR
+     614/    6117 : 003142              	DCA	SADDR
+     615/    6120 : 005256              	JMP	SM1
+     616/    6121 :                     SM3:
+     617/    6121 : 001347              	TAD	L '-'-'.'
+     618/    6122 : 007440              	SZA
+     619/    6123 : 005325              	JMP	SM4
+     620/    6124 :                     	;; '.' (Quit)
+     621/    6124 : 005501              	JMP	I C_WSTART
+     622/    6125 :                     SM4:
+     623/    6125 : 004512              	JMS	I C_RDOCT
+     624/    6126 : 007200              	CLA
+     625/    6127 : 001145              	TAD	CNT
+     626/    6130 : 007450              	SNA
+     627/    6131 : 005507              	JMP	I C_ERR
+     628/    6132 : 007200              	CLA
+     629/    6133 : 001146              	TAD	VAL
+     630/    6134 : 003542              	DCA	I SADDR		; OK. This is Main Memory
+     631/    6135 : 002142              	ISZ	SADDR
+     632/    6136 : 007000              	NOP
+     633/    6137 : 005256              	JMP	SM1
+     634/    6140 :                     
+     635/    6140 : 000070 006201       	LTORG
              6142 : 006202 007334 
              6144 : 000040 000117 
              6146 : 007723 007777     
-     629/    6150 :                     
-     630/    6150 : =>TRUE               	IF USE_HEXCMD
-     631/    6150 :                     
-     632/    6150 :                     	ALIGN	128
-     633/    6200 :                     
-     634/    6200 :                     HEXIN:
-     635/    6200 : 000000              	DC	0
-     636/    6201 : 007200              	CLA
- AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 13 - 2026年02月02日 19時36分18秒
+ AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 13 - 2026年02月02日 20時16分21秒
 
 
-     637/    6202 : 003146              	DCA	VAL
-     638/    6203 : 004213              	JMS	HI0
-     639/    6204 : 007200              	CLA
-     640/    6205 : 001146              	TAD	VAL
-     641/    6206 : 007106              	CLL RTL
-     642/    6207 : 007106              	CLL RTL
-     643/    6210 : 003146              	DCA	VAL
-     644/    6211 : 004213              	JMS	HI0
-     645/    6212 : 005600              	JMP	I HEXIN
-     646/    6213 :                     
-     647/    6213 :                     HI0:
-     648/    6213 : 000000              	DC	0
-     649/    6214 : 004504              	JMS	I C_CONIN
-     650/    6215 : 004511              	JMS	I C_UPPER
-     651/    6216 : 007200              	CLA
-     652/    6217 : 001144              	TAD	CH
-     653/    6220 : 001246              	TAD	L -'0'
-     654/    6221 : 007510              	SPA
-     655/    6222 : 005245              	JMP	HIR
-     656/    6223 : 001247              	TAD	L '0'-'9'-1
-     657/    6224 : 007510              	SPA
-     658/    6225 : 005240              	JMP	HI1
-     659/    6226 : 001250              	TAD	L '9'+1-'A'
-     660/    6227 : 007510              	SPA
-     661/    6230 : 005245              	JMP	HIR
-     662/    6231 : 001251              	TAD	L 'A'-'F'-1
-     663/    6232 : 007500              	SMA
-     664/    6233 : 005245              	JMP	HIR
-     665/    6234 : 007200              	CLA
-     666/    6235 : 001144              	TAD	CH
-     667/    6236 : 001252              	TAD	L 10-'A'
-     668/    6237 : 005243              	JMP	HI2
-     669/    6240 :                     HI1:
-     670/    6240 : 007200              	CLA
-     671/    6241 : 001144              	TAD	CH
-     672/    6242 : 001246              	TAD	L -'0'
-     673/    6243 :                     HI2:
-     674/    6243 : 001146              	TAD	VAL
-     675/    6244 : 003146              	DCA	VAL
-     676/    6245 :                     HIR:
-     677/    6245 : 005613              	JMP	I HI0
-     678/    6246 :                     
-     679/    6246 : 007720 007766       	LTORG
+     636/    6150 :                     
+     637/    6150 : =>TRUE               	IF USE_HEXCMD
+     638/    6150 :                     
+     639/    6150 :                     	ALIGN	128
+     640/    6200 :                     
+     641/    6200 :                     HEXIN:
+     642/    6200 : 000000              	DC	0
+     643/    6201 : 007200              	CLA
+     644/    6202 : 003146              	DCA	VAL
+     645/    6203 : 004213              	JMS	HI0
+     646/    6204 : 007200              	CLA
+     647/    6205 : 001146              	TAD	VAL
+     648/    6206 : 007106              	CLL RTL
+     649/    6207 : 007106              	CLL RTL
+     650/    6210 : 003146              	DCA	VAL
+     651/    6211 : 004213              	JMS	HI0
+     652/    6212 : 005600              	JMP	I HEXIN
+     653/    6213 :                     
+     654/    6213 :                     HI0:
+     655/    6213 : 000000              	DC	0
+     656/    6214 : 004504              	JMS	I C_CONIN
+     657/    6215 : 004511              	JMS	I C_UPPER
+     658/    6216 : 007200              	CLA
+     659/    6217 : 001144              	TAD	CH
+     660/    6220 : 001246              	TAD	L -'0'
+     661/    6221 : 007510              	SPA
+     662/    6222 : 005245              	JMP	HIR
+     663/    6223 : 001247              	TAD	L '0'-'9'-1
+     664/    6224 : 007510              	SPA
+     665/    6225 : 005240              	JMP	HI1
+     666/    6226 : 001250              	TAD	L '9'+1-'A'
+     667/    6227 : 007510              	SPA
+     668/    6230 : 005245              	JMP	HIR
+     669/    6231 : 001251              	TAD	L 'A'-'F'-1
+     670/    6232 : 007500              	SMA
+     671/    6233 : 005245              	JMP	HIR
+     672/    6234 : 007200              	CLA
+     673/    6235 : 001144              	TAD	CH
+     674/    6236 : 001252              	TAD	L 10-'A'
+     675/    6237 : 005243              	JMP	HI2
+     676/    6240 :                     HI1:
+     677/    6240 : 007200              	CLA
+     678/    6241 : 001144              	TAD	CH
+     679/    6242 : 001246              	TAD	L -'0'
+     680/    6243 :                     HI2:
+     681/    6243 : 001146              	TAD	VAL
+     682/    6244 : 003146              	DCA	VAL
+     683/    6245 :                     HIR:
+     684/    6245 : 005613              	JMP	I HI0
+     685/    6246 :                     
+     686/    6246 : 007720 007766       	LTORG
              6250 : 007771 007772 
              6252 : 007711             
-     680/    6253 :                     
-     681/    6253 :                     	ALIGN	128
-     682/    6400 :                     
-     683/    6400 :                     LOADH:	
-     684/    6400 : 002017              	ISZ	00017		; Inc 00017 (never skip)
-     685/    6401 : 004510              	JMS	I C_SKIPSP
-     686/    6402 : 004512              	JMS	I C_RDOCT
-     687/    6403 : 004510              	JMS	I C_SKIPSP
-     688/    6404 : 007200              	CLA
-     689/    6405 : 001144              	TAD	CH
-     690/    6406 : 007440              	SZA
-     691/    6407 : 005507              	JMP	I C_ERR
-     692/    6410 : 007240              	CLA CMA
-     693/    6411 : 001146              	TAD	VAL
-     694/    6412 : 003016              	DCA	00016		; Offset-1
- AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 14 - 2026年02月02日 19時36分18秒
+     687/    6253 :                     
+     688/    6253 :                     	ALIGN	128
+     689/    6400 :                     
+     690/    6400 :                     LOADH:	
+     691/    6400 : 002017              	ISZ	00017		; Inc 00017 (never skip)
+     692/    6401 : 004510              	JMS	I C_SKIPSP
+     693/    6402 : 004512              	JMS	I C_RDOCT
+ AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 14 - 2026年02月02日 20時16分21秒
 
 
-     695/    6413 :                     LH0:
-     696/    6413 : 004504              	JMS	I C_CONIN
-     697/    6414 : 004511              	JMS	I C_UPPER
-     698/    6415 : 007200              	CLA
-     699/    6416 : 001144              	TAD	CH
-     700/    6417 : 001367              	TAD	L -':'
-     701/    6420 : 007450              	SNA
-     702/    6421 : 005234              	JMP	LHI0
-     703/    6422 :                     
-     704/    6422 :                     LH2:
-     705/    6422 :                     	;; Skip to EOL
-     706/    6422 : 007200              	CLA
-     707/    6423 : 001144              	TAD	CH
-     708/    6424 : 001370              	TAD	L -CR
-     709/    6425 : 007450              	SNA
-     710/    6426 : 005213              	JMP	LH0
-     711/    6427 : 001371              	TAD	L CR-LF
-     712/    6430 : 007450              	SNA
-     713/    6431 : 005213              	JMP	LH0
-     714/    6432 :                     LH3:
-     715/    6432 : 004504              	JMS	I C_CONIN
-     716/    6433 : 005222              	JMP	LH2
-     717/    6434 :                     
-     718/    6434 :                     LHI0:
-     719/    6434 : 004772              	JMS	IL HEXIN
-     720/    6435 : 007200              	CLA
-     721/    6436 : 001146              	TAD	VAL
-     722/    6437 : 003150              	DCA	SUM
-     723/    6440 : 001146              	TAD	VAL
-     724/    6441 : 007110              	CLL RAR
-     725/    6442 : 007430              	SZL
-     726/    6443 : 005362              	JMP	LHIE		; Odd length error
-     727/    6444 : 007041              	CMA IAC
-     728/    6445 : 003145              	DCA	CNT
-     729/    6446 :                     
-     730/    6446 : 004772              	JMS	IL HEXIN
-     731/    6447 : 007200              	CLA
-     732/    6450 : 001146              	TAD	VAL
-     733/    6451 : 001150              	TAD	SUM
-     734/    6452 : 003150              	DCA	SUM
-     735/    6453 : 001146              	TAD	VAL
-     736/    6454 : 007002              	BSW
-     737/    6455 : 007104              	CLL RAL
-     738/    6456 : 000373              	AND	L 0xf00
-     739/    6457 : 003017              	DCA	00017		; Address H
-     740/    6460 :                     
-     741/    6460 : 004772              	JMS	IL HEXIN
-     742/    6461 : 007200              	CLA
-     743/    6462 : 001146              	TAD	VAL
-     744/    6463 : 001150              	TAD	SUM
-     745/    6464 : 003150              	DCA	SUM
-     746/    6465 : 001146              	TAD	VAL
-     747/    6466 : 007110              	CLL RAR
-     748/    6467 : 007430              	SZL
-     749/    6470 : 005507              	JMP	I C_ERR		; Odd address error
-     750/    6471 : 001017              	TAD	00017
-     751/    6472 :                     
-     752/    6472 : 001016              	TAD	00016		; Add offset
-     753/    6473 : 003017              	DCA	00017
-     754/    6474 :                     
- AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 15 - 2026年02月02日 19時36分18秒
+     694/    6403 : 004510              	JMS	I C_SKIPSP
+     695/    6404 : 007200              	CLA
+     696/    6405 : 001144              	TAD	CH
+     697/    6406 : 007440              	SZA
+     698/    6407 : 005507              	JMP	I C_ERR
+     699/    6410 : 007240              	CLA CMA
+     700/    6411 : 001146              	TAD	VAL
+     701/    6412 : 003016              	DCA	00016		; Offset-1
+     702/    6413 :                     LH0:
+     703/    6413 : 004504              	JMS	I C_CONIN
+     704/    6414 : 004511              	JMS	I C_UPPER
+     705/    6415 : 007200              	CLA
+     706/    6416 : 001144              	TAD	CH
+     707/    6417 : 001367              	TAD	L -':'
+     708/    6420 : 007450              	SNA
+     709/    6421 : 005234              	JMP	LHI0
+     710/    6422 :                     
+     711/    6422 :                     LH2:
+     712/    6422 :                     	;; Skip to EOL
+     713/    6422 : 007200              	CLA
+     714/    6423 : 001144              	TAD	CH
+     715/    6424 : 001370              	TAD	L -CR
+     716/    6425 : 007450              	SNA
+     717/    6426 : 005213              	JMP	LH0
+     718/    6427 : 001371              	TAD	L CR-LF
+     719/    6430 : 007450              	SNA
+     720/    6431 : 005213              	JMP	LH0
+     721/    6432 :                     LH3:
+     722/    6432 : 004504              	JMS	I C_CONIN
+     723/    6433 : 005222              	JMP	LH2
+     724/    6434 :                     
+     725/    6434 :                     LHI0:
+     726/    6434 : 004772              	JMS	IL HEXIN
+     727/    6435 : 007200              	CLA
+     728/    6436 : 001146              	TAD	VAL
+     729/    6437 : 003150              	DCA	SUM
+     730/    6440 : 001146              	TAD	VAL
+     731/    6441 : 007110              	CLL RAR
+     732/    6442 : 007430              	SZL
+     733/    6443 : 005362              	JMP	LHIE		; Odd length error
+     734/    6444 : 007041              	CMA IAC
+     735/    6445 : 003145              	DCA	CNT
+     736/    6446 :                     
+     737/    6446 : 004772              	JMS	IL HEXIN
+     738/    6447 : 007200              	CLA
+     739/    6450 : 001146              	TAD	VAL
+     740/    6451 : 001150              	TAD	SUM
+     741/    6452 : 003150              	DCA	SUM
+     742/    6453 : 001146              	TAD	VAL
+     743/    6454 : 007002              	BSW
+     744/    6455 : 007104              	CLL RAL
+     745/    6456 : 000373              	AND	L 0xf00
+     746/    6457 : 003017              	DCA	00017		; Address H
+     747/    6460 :                     
+     748/    6460 : 004772              	JMS	IL HEXIN
+     749/    6461 : 007200              	CLA
+     750/    6462 : 001146              	TAD	VAL
+     751/    6463 : 001150              	TAD	SUM
+     752/    6464 : 003150              	DCA	SUM
+     753/    6465 : 001146              	TAD	VAL
+ AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 15 - 2026年02月02日 20時16分21秒
 
 
-     755/    6474 : 004772              	JMS	IL HEXIN
-     756/    6475 : 007200              	CLA
-     757/    6476 : 001146              	TAD	VAL
-     758/    6477 : 001150              	TAD	SUM
-     759/    6500 : 003150              	DCA	SUM
-     760/    6501 : 007040              	CMA
-     761/    6502 : 001146              	TAD	VAL
-     762/    6503 : 007450              	SNA
-     763/    6504 : 005311              	JMP	LHI00
-     764/    6505 : 007001              	IAC
-     765/    6506 : 007450              	SNA
-     766/    6507 : 005311              	JMP	LHI00
-     767/    6510 : 005232              	JMP	LH3		; Skip unsupported record type
-     768/    6511 :                     LHI00:
-     769/    6511 : 001146              	TAD	VAL
-     770/    6512 : 003147              	DCA	FLAG		; RECTYP
-     771/    6513 : 001145              	TAD	CNT
-     772/    6514 : 007450              	SNA
-     773/    6515 : 005345              	JMP	LHI3		; length == 0
-     774/    6516 :                     LHI1:
-     775/    6516 : 004772              	JMS	IL HEXIN
-     776/    6517 : 007200              	CLA
-     777/    6520 : 001146              	TAD	VAL
-     778/    6521 : 001150              	TAD	SUM
-     779/    6522 : 003150              	DCA	SUM
-     780/    6523 : 001146              	TAD	VAL
-     781/    6524 : 007002              	BSW
-     782/    6525 : 007006              	RTL
-     783/    6526 : 000373              	AND	L 0xf00
-     784/    6527 : 003120              	DCA	INBUF		; Save upper 4 bit temporary
-     785/    6530 :                     
-     786/    6530 : 004772              	JMS	IL HEXIN
-     787/    6531 : 007200              	CLA
-     788/    6532 : 001146              	TAD	VAL
-     789/    6533 : 001150              	TAD	SUM
-     790/    6534 : 003150              	DCA	SUM
-     791/    6535 :                     
-     792/    6535 : 001147              	TAD	FLAG
-     793/    6536 : 007440              	SZA
-     794/    6537 : 005343              	JMP	LHI2
-     795/    6540 :                     
-     796/    6540 : 001146              	TAD	VAL
-     797/    6541 : 001120              	TAD	INBUF
-     798/    6542 : 003417              	DCA	I 00017		; This (00017) is main memory
-     799/    6543 :                     LHI2:
-     800/    6543 : 002145              	ISZ	CNT
-     801/    6544 : 005316              	JMP	LHI1
-     802/    6545 :                     LHI3:
-     803/    6545 : 004772              	JMS	IL HEXIN
-     804/    6546 : 007200              	CLA
-     805/    6547 : 001146              	TAD	VAL
-     806/    6550 : 001150              	TAD	SUM
-     807/    6551 : 000374              	AND	L 0377
-     808/    6552 : 007440              	SZA
-     809/    6553 : 005362              	JMP	LHIE		; Checksum error
-     810/    6554 :                     
-     811/    6554 : =>TRUE               	IF USE_TANGNANO
-     812/    6554 : 004775              	JMS	IL OUT0017	; show progress
-     813/    6555 : [811]                	ENDIF
-     814/    6555 :                     
- AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 16 - 2026年02月02日 19時36分18秒
+     754/    6466 : 007110              	CLL RAR
+     755/    6467 : 007430              	SZL
+     756/    6470 : 005507              	JMP	I C_ERR		; Odd address error
+     757/    6471 : 001017              	TAD	00017
+     758/    6472 :                     
+     759/    6472 : 001016              	TAD	00016		; Add offset
+     760/    6473 : 003017              	DCA	00017
+     761/    6474 :                     
+     762/    6474 : 004772              	JMS	IL HEXIN
+     763/    6475 : 007200              	CLA
+     764/    6476 : 001146              	TAD	VAL
+     765/    6477 : 001150              	TAD	SUM
+     766/    6500 : 003150              	DCA	SUM
+     767/    6501 : 007040              	CMA
+     768/    6502 : 001146              	TAD	VAL
+     769/    6503 : 007450              	SNA
+     770/    6504 : 005311              	JMP	LHI00
+     771/    6505 : 007001              	IAC
+     772/    6506 : 007450              	SNA
+     773/    6507 : 005311              	JMP	LHI00
+     774/    6510 : 005232              	JMP	LH3		; Skip unsupported record type
+     775/    6511 :                     LHI00:
+     776/    6511 : 001146              	TAD	VAL
+     777/    6512 : 003147              	DCA	FLAG		; RECTYP
+     778/    6513 : 001145              	TAD	CNT
+     779/    6514 : 007450              	SNA
+     780/    6515 : 005345              	JMP	LHI3		; length == 0
+     781/    6516 :                     LHI1:
+     782/    6516 : 004772              	JMS	IL HEXIN
+     783/    6517 : 007200              	CLA
+     784/    6520 : 001146              	TAD	VAL
+     785/    6521 : 001150              	TAD	SUM
+     786/    6522 : 003150              	DCA	SUM
+     787/    6523 : 001146              	TAD	VAL
+     788/    6524 : 007002              	BSW
+     789/    6525 : 007006              	RTL
+     790/    6526 : 000373              	AND	L 0xf00
+     791/    6527 : 003120              	DCA	INBUF		; Save upper 4 bit temporary
+     792/    6530 :                     
+     793/    6530 : 004772              	JMS	IL HEXIN
+     794/    6531 : 007200              	CLA
+     795/    6532 : 001146              	TAD	VAL
+     796/    6533 : 001150              	TAD	SUM
+     797/    6534 : 003150              	DCA	SUM
+     798/    6535 :                     
+     799/    6535 : 001147              	TAD	FLAG
+     800/    6536 : 007440              	SZA
+     801/    6537 : 005343              	JMP	LHI2
+     802/    6540 :                     
+     803/    6540 : 001146              	TAD	VAL
+     804/    6541 : 001120              	TAD	INBUF
+     805/    6542 : 003417              	DCA	I 00017		; This (00017) is main memory
+     806/    6543 :                     LHI2:
+     807/    6543 : 002145              	ISZ	CNT
+     808/    6544 : 005316              	JMP	LHI1
+     809/    6545 :                     LHI3:
+     810/    6545 : 004772              	JMS	IL HEXIN
+     811/    6546 : 007200              	CLA
+     812/    6547 : 001146              	TAD	VAL
+     813/    6550 : 001150              	TAD	SUM
+ AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 16 - 2026年02月02日 20時16分21秒
 
 
-     815/    6555 : 007240              	CLA CMA
-     816/    6556 : 001147              	TAD	FLAG
-     817/    6557 : 007440              	SZA
-     818/    6560 : 005232              	JMP	LH3
-     819/    6561 : 005501              	JMP	I C_WSTART
-     820/    6562 :                     LHIE:
-     821/    6562 : 007200              	CLA
-     822/    6563 : 001376              	TAD	L IHEMSG-1
-     823/    6564 : 003017              	DCA	00017
-     824/    6565 : 004503              	JMS	I C_STROUT
-     825/    6566 : 005501              	JMP	I C_WSTART
-     826/    6567 :                     
-     827/    6567 : 007706 007763       	LTORG
+     814/    6551 : 000374              	AND	L 0377
+     815/    6552 : 007440              	SZA
+     816/    6553 : 005362              	JMP	LHIE		; Checksum error
+     817/    6554 :                     
+     818/    6554 : =>TRUE               	IF USE_TANGNANO
+     819/    6554 : 004775              	JMS	IL OUT0017	; show progress
+     820/    6555 : [818]                	ENDIF
+     821/    6555 :                     
+     822/    6555 : 007240              	CLA CMA
+     823/    6556 : 001147              	TAD	FLAG
+     824/    6557 : 007440              	SZA
+     825/    6560 : 005232              	JMP	LH3
+     826/    6561 : 005501              	JMP	I C_WSTART
+     827/    6562 :                     LHIE:
+     828/    6562 : 007200              	CLA
+     829/    6563 : 001376              	TAD	L IHEMSG-1
+     830/    6564 : 003017              	DCA	00017
+     831/    6565 : 004503              	JMS	I C_STROUT
+     832/    6566 : 005501              	JMP	I C_WSTART
+     833/    6567 :                     
+     834/    6567 : 007706 007763       	LTORG
              6571 : 000003 006200 
              6573 : 007400 000377 
              6575 : 007216 007304     
-     828/    6577 :                     
-     829/    6577 : [630]                	ENDIF
-     830/    6577 :                     
-     831/    6577 :                     ;;; Other support routines
-     832/    6577 :                     	ALIGN	128
-     833/    6600 :                     
-     834/    6600 : =>TRUE               	IF USE_CP		
-     835/    6600 :                     	;; STROUT is moved to another page if use CP
-     836/    6600 : =>FALSE              	ELSE 
-     837/    6600 :                     	;; not USE_CP
-     838/    6600 :                     STROUT:
-     839/    6600 :                     	DC	0
-     840/    6600 :                     	CLA
-     841/    6600 :                     STRO0:
-     842/    6600 :                     	TAD	I 00017
-     843/    6600 :                     	SNA
-     844/    6600 :                     	JMP	I STROUT	; Return
-     845/    6600 :                     	DCA	CH
-     846/    6600 :                     	JMS	I C_CONOUT
-     847/    6600 :                     	JMP	STRO0
-     848/    6600 :                     	;; 
-     849/    6600 : [834]                	ENDIF
-     850/    6600 :                     
-     851/    6600 :                     OCTOUT2:
-     852/    6600 : 000000              	DC	0
-     853/    6601 : 007200              	CLA
-     854/    6602 : 001146              	TAD	VAL
-     855/    6603 : 007010              	RAR
-     856/    6604 : 007012              	RTR
-     857/    6605 : 000347              	AND	L 00007
-     858/    6606 : 001350              	TAD	L '0'
-     859/    6607 : 003144              	DCA	CH
-     860/    6610 : 004502              	JMS	I C_CONOUT
-     861/    6611 : 007200              	CLA
-     862/    6612 : 001146              	TAD	VAL
-     863/    6613 : 000347              	AND	L 00007
-     864/    6614 : 001350              	TAD	L '0'
-     865/    6615 : 003144              	DCA	CH
-     866/    6616 : 004502              	JMS	I C_CONOUT
-     867/    6617 : 005600              	JMP	I OCTOUT2
-     868/    6620 :                     OCTOUT4:
-     869/    6620 : 000000              	DC	0
-     870/    6621 : 007200              	CLA
-     871/    6622 : 001146              	TAD	VAL
- AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 17 - 2026年02月02日 19時36分18秒
+     835/    6577 :                     
+     836/    6577 : [637]                	ENDIF
+     837/    6577 :                     
+     838/    6577 :                     ;;; Other support routines
+     839/    6577 :                     	ALIGN	128
+     840/    6600 :                     
+     841/    6600 : =>TRUE               	IF USE_CP		
+     842/    6600 :                     	;; STROUT is moved to another page if use CP
+     843/    6600 : =>FALSE              	ELSE 
+     844/    6600 :                     	;; not USE_CP
+     845/    6600 :                     STROUT:
+     846/    6600 :                     	DC	0
+     847/    6600 :                     	CLA
+     848/    6600 :                     STRO0:
+     849/    6600 :                     	TAD	I 00017
+     850/    6600 :                     	SNA
+     851/    6600 :                     	JMP	I STROUT	; Return
+     852/    6600 :                     	DCA	CH
+     853/    6600 :                     	JMS	I C_CONOUT
+     854/    6600 :                     	JMP	STRO0
+     855/    6600 :                     	;; 
+     856/    6600 : [841]                	ENDIF
+     857/    6600 :                     
+     858/    6600 :                     OCTOUT2:
+     859/    6600 : 000000              	DC	0
+     860/    6601 : 007200              	CLA
+     861/    6602 : 001146              	TAD	VAL
+     862/    6603 : 007010              	RAR
+     863/    6604 : 007012              	RTR
+     864/    6605 : 000347              	AND	L 00007
+     865/    6606 : 001350              	TAD	L '0'
+     866/    6607 : 003144              	DCA	CH
+     867/    6610 : 004502              	JMS	I C_CONOUT
+     868/    6611 : 007200              	CLA
+     869/    6612 : 001146              	TAD	VAL
+     870/    6613 : 000347              	AND	L 00007
+ AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 17 - 2026年02月02日 20時16分21秒
 
 
-     872/    6623 : 007002              	BSW
-     873/    6624 : 003146              	DCA	VAL
-     874/    6625 : 004200              	JMS	OCTOUT2
-     875/    6626 : 007200              	CLA
-     876/    6627 : 001146              	TAD	VAL
-     877/    6630 : 007002              	BSW
-     878/    6631 : 003146              	DCA	VAL
-     879/    6632 : 004200              	JMS	OCTOUT2
-     880/    6633 : 005620              	JMP	I OCTOUT4
-     881/    6634 :                     
-     882/    6634 :                     CRLF:
-     883/    6634 : 000000              	DC	0
-     884/    6635 : 007200              	CLA
-     885/    6636 : 001351              	TAD	L CR
-     886/    6637 : 003144              	DCA	CH
-     887/    6640 : 004502              	JMS	I C_CONOUT
-     888/    6641 : 007200              	CLA
-     889/    6642 : 001352              	TAD	L LF
-     890/    6643 : 003144              	DCA	CH
-     891/    6644 : 004502              	JMS	I C_CONOUT
-     892/    6645 : 005634              	JMP	I CRLF
-     893/    6646 :                     
-     894/    6646 :                     GETLIN:
-     895/    6646 : 000000              	DC	0
-     896/    6647 : 007200              	CLA
-     897/    6650 : 003145              	DCA	CNT
-     898/    6651 : 001353              	TAD	L INBUF-1
-     899/    6652 : 003017              	DCA	00017
-     900/    6653 :                     GL0:
-     901/    6653 : 004504              	JMS	I C_CONIN
-     902/    6654 : 007200              	CLA
-     903/    6655 : 001144              	TAD	CH
-     904/    6656 : 001354              	TAD	L -CR
-     905/    6657 : 007450              	SNA
-     906/    6660 : 005343              	JMP	GLE
-     907/    6661 : 001355              	TAD	L CR-LF
-     908/    6662 : 007450              	SNA
-     909/    6663 : 005343              	JMP	GLE
-     910/    6664 : 001356              	TAD	L LF-BS
-     911/    6665 : 007450              	SNA
-     912/    6666 : 005315              	JMP	GLB
-     913/    6667 : 001357              	TAD	L BS-DEL
-     914/    6670 : 007450              	SNA
-     915/    6671 : 005315              	JMP	GLB
-     916/    6672 : 001360              	TAD	L DEL-' '
-     917/    6673 : 007510              	SPA
-     918/    6674 : 005253              	JMP	GL0
-     919/    6675 : 001361              	TAD	L ' '-0x80
-     920/    6676 : 007500              	SMA
-     921/    6677 : 005253              	JMP	GL0
-     922/    6700 : 007200              	CLA
-     923/    6701 : 001145              	TAD	CNT
-     924/    6702 : 001362              	TAD	L -BUFLEN+1
-     925/    6703 : 007500              	SMA
-     926/    6704 : 005253              	JMP	GL0
-     927/    6705 : 007200              	CLA
-     928/    6706 : 001144              	TAD	CH
-     929/    6707 : (MACRO)              	DCA_I_00017
-     929/    6707 : =>TRUE                       IF USE_CP
-     929/    6707 : 004161                      JMS DCA_I_17_PAGE0
- AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 18 - 2026年02月02日 19時36分18秒
+     871/    6614 : 001350              	TAD	L '0'
+     872/    6615 : 003144              	DCA	CH
+     873/    6616 : 004502              	JMS	I C_CONOUT
+     874/    6617 : 005600              	JMP	I OCTOUT2
+     875/    6620 :                     OCTOUT4:
+     876/    6620 : 000000              	DC	0
+     877/    6621 : 007200              	CLA
+     878/    6622 : 001146              	TAD	VAL
+     879/    6623 : 007002              	BSW
+     880/    6624 : 003146              	DCA	VAL
+     881/    6625 : 004200              	JMS	OCTOUT2
+     882/    6626 : 007200              	CLA
+     883/    6627 : 001146              	TAD	VAL
+     884/    6630 : 007002              	BSW
+     885/    6631 : 003146              	DCA	VAL
+     886/    6632 : 004200              	JMS	OCTOUT2
+     887/    6633 : 005620              	JMP	I OCTOUT4
+     888/    6634 :                     
+     889/    6634 :                     CRLF:
+     890/    6634 : 000000              	DC	0
+     891/    6635 : 007200              	CLA
+     892/    6636 : 001351              	TAD	L CR
+     893/    6637 : 003144              	DCA	CH
+     894/    6640 : 004502              	JMS	I C_CONOUT
+     895/    6641 : 007200              	CLA
+     896/    6642 : 001352              	TAD	L LF
+     897/    6643 : 003144              	DCA	CH
+     898/    6644 : 004502              	JMS	I C_CONOUT
+     899/    6645 : 005634              	JMP	I CRLF
+     900/    6646 :                     
+     901/    6646 :                     GETLIN:
+     902/    6646 : 000000              	DC	0
+     903/    6647 : 007200              	CLA
+     904/    6650 : 003145              	DCA	CNT
+     905/    6651 : 001353              	TAD	L INBUF-1
+     906/    6652 : 003017              	DCA	00017
+     907/    6653 :                     GL0:
+     908/    6653 : 004504              	JMS	I C_CONIN
+     909/    6654 : 007200              	CLA
+     910/    6655 : 001144              	TAD	CH
+     911/    6656 : 001354              	TAD	L -CR
+     912/    6657 : 007450              	SNA
+     913/    6660 : 005343              	JMP	GLE
+     914/    6661 : 001355              	TAD	L CR-LF
+     915/    6662 : 007450              	SNA
+     916/    6663 : 005343              	JMP	GLE
+     917/    6664 : 001356              	TAD	L LF-BS
+     918/    6665 : 007450              	SNA
+     919/    6666 : 005315              	JMP	GLB
+     920/    6667 : 001357              	TAD	L BS-DEL
+     921/    6670 : 007450              	SNA
+     922/    6671 : 005315              	JMP	GLB
+     923/    6672 : 001360              	TAD	L DEL-' '
+     924/    6673 : 007510              	SPA
+     925/    6674 : 005253              	JMP	GL0
+     926/    6675 : 001361              	TAD	L ' '-0x80
+     927/    6676 : 007500              	SMA
+     928/    6677 : 005253              	JMP	GL0
+     929/    6700 : 007200              	CLA
+     930/    6701 : 001145              	TAD	CNT
+ AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 18 - 2026年02月02日 20時16分21秒
 
 
-     929/    6710 : =>FALSE                      ELSE
-     929/    6710 :                             DCA I 00017
-     929/    6710 : [929]                        ENDIF
-     930/    6710 : 001144              	TAD	CH
-     931/    6711 : 004502              	JMS	I C_CONOUT
-     932/    6712 : 002145              	ISZ	CNT
-     933/    6713 : 007000              	NOP
-     934/    6714 : 005253              	JMP	GL0
-     935/    6715 :                     GLB:
-     936/    6715 : 007200              	CLA
-     937/    6716 : 001145              	TAD	CNT
-     938/    6717 : 007450              	SNA
-     939/    6720 : 005253              	JMP	GL0
-     940/    6721 : 007240              	CLA CMA
-     941/    6722 : 001145              	TAD	CNT
-     942/    6723 : 003145              	DCA	CNT
-     943/    6724 : 007240              	CLA CMA
-     944/    6725 : 001017              	TAD	00017
-     945/    6726 : 003017              	DCA	00017
-     946/    6727 : 001363              	TAD	L BS
-     947/    6730 : 003144              	DCA	CH
-     948/    6731 : 004502              	JMS	I C_CONOUT
-     949/    6732 : 007200              	CLA
-     950/    6733 : 001364              	TAD	L ' '
-     951/    6734 : 003144              	DCA	CH
-     952/    6735 : 004502              	JMS	I C_CONOUT
-     953/    6736 : 007200              	CLA
-     954/    6737 : 001363              	TAD	L BS
-     955/    6740 : 003144              	DCA	CH
-     956/    6741 : 004502              	JMS	I C_CONOUT
-     957/    6742 : 005253              	JMP	GL0
-     958/    6743 :                     GLE:	
-     959/    6743 : 004234              	JMS	CRLF
-     960/    6744 : 007200              	CLA
-     961/    6745 : (MACRO)              	DCA_I_00017
-     961/    6745 : =>TRUE                       IF USE_CP
-     961/    6745 : 004161                      JMS DCA_I_17_PAGE0
-     961/    6746 : =>FALSE                      ELSE
-     961/    6746 :                             DCA I 00017
-     961/    6746 : [961]                        ENDIF
-     962/    6746 : 005646              	JMP	I GETLIN
-     963/    6747 :                     
-     964/    6747 : 000007 000060       	LTORG
+     931/    6702 : 001362              	TAD	L -BUFLEN+1
+     932/    6703 : 007500              	SMA
+     933/    6704 : 005253              	JMP	GL0
+     934/    6705 : 007200              	CLA
+     935/    6706 : 001144              	TAD	CH
+     936/    6707 : (MACRO)              	DCA_I_00017
+     936/    6707 : =>TRUE                       IF USE_CP
+     936/    6707 : 004161                      JMS DCA_I_17_PAGE0
+     936/    6710 : =>FALSE                      ELSE
+     936/    6710 :                             DCA I 00017
+     936/    6710 : [936]                        ENDIF
+     937/    6710 : 001144              	TAD	CH
+     938/    6711 : 004502              	JMS	I C_CONOUT
+     939/    6712 : 002145              	ISZ	CNT
+     940/    6713 : 007000              	NOP
+     941/    6714 : 005253              	JMP	GL0
+     942/    6715 :                     GLB:
+     943/    6715 : 007200              	CLA
+     944/    6716 : 001145              	TAD	CNT
+     945/    6717 : 007450              	SNA
+     946/    6720 : 005253              	JMP	GL0
+     947/    6721 : 007240              	CLA CMA
+     948/    6722 : 001145              	TAD	CNT
+     949/    6723 : 003145              	DCA	CNT
+     950/    6724 : 007240              	CLA CMA
+     951/    6725 : 001017              	TAD	00017
+     952/    6726 : 003017              	DCA	00017
+     953/    6727 : 001363              	TAD	L BS
+     954/    6730 : 003144              	DCA	CH
+     955/    6731 : 004502              	JMS	I C_CONOUT
+     956/    6732 : 007200              	CLA
+     957/    6733 : 001364              	TAD	L ' '
+     958/    6734 : 003144              	DCA	CH
+     959/    6735 : 004502              	JMS	I C_CONOUT
+     960/    6736 : 007200              	CLA
+     961/    6737 : 001363              	TAD	L BS
+     962/    6740 : 003144              	DCA	CH
+     963/    6741 : 004502              	JMS	I C_CONOUT
+     964/    6742 : 005253              	JMP	GL0
+     965/    6743 :                     GLE:	
+     966/    6743 : 004234              	JMS	CRLF
+     967/    6744 : 007200              	CLA
+     968/    6745 : (MACRO)              	DCA_I_00017
+     968/    6745 : =>TRUE                       IF USE_CP
+     968/    6745 : 004161                      JMS DCA_I_17_PAGE0
+     968/    6746 : =>FALSE                      ELSE
+     968/    6746 :                             DCA I 00017
+     968/    6746 : [968]                        ENDIF
+     969/    6746 : 005646              	JMP	I GETLIN
+     970/    6747 :                     
+     971/    6747 : 000007 000060       	LTORG
              6751 : 000015 000012 
              6753 : 000117 007763 
              6755 : 000003 000002 
              6757 : 007611 000137 
              6761 : 007640 007761 
              6763 : 000010 000040     
-     965/    6765 :                     	ALIGN	128
-     966/    7000 :                     
-     967/    7000 :                     SKIPSP:
-     968/    7000 : 000000              	DC	0
-     969/    7001 :                     SS0:
-     970/    7001 : 007200              	CLA
-     971/    7002 : (MACRO)              	TAD_I_00017
-     971/    7002 : =>TRUE                       IF USE_CP
-     971/    7002 : 004151                      JMS TAD_I_17_PAGE0
-     971/    7003 : =>FALSE                      ELSE
-     971/    7003 :                             TAD I 00017
- AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 19 - 2026年02月02日 19時36分18秒
+     972/    6765 :                     	ALIGN	128
+     973/    7000 :                     
+     974/    7000 :                     SKIPSP:
+ AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 19 - 2026年02月02日 20時16分21秒
 
 
-     971/    7003 : [971]                        ENDIF
-     972/    7003 : 003144              	DCA	CH
-     973/    7004 : 001144              	TAD	CH
-     974/    7005 : 001273              	TAD	L -' '
-     975/    7006 : 007450              	SNA
-     976/    7007 : 005201              	JMP	SS0
-     977/    7010 : 007240              	CLA CMA			; AC=-1
-     978/    7011 : 001017              	TAD	00017
-     979/    7012 : 003017              	DCA	00017
-     980/    7013 : 005600              	JMP	I SKIPSP
-     981/    7014 :                     
-     982/    7014 :                     UPPER:
-     983/    7014 : 000000              	DC	0
-     984/    7015 : 007200              	CLA
-     985/    7016 : 001144              	TAD	CH
-     986/    7017 : 001274              	TAD	L -'a'
-     987/    7020 : 007510              	SPA
-     988/    7021 : 005614              	JMP	I UPPER		; CH < 'a'
-     989/    7022 : 007200              	CLA
-     990/    7023 : 001144              	TAD	CH
-     991/    7024 : 001275              	TAD	L -'z'
-     992/    7025 : 007540              	SMA SZA
-     993/    7026 : 005614              	JMP	I UPPER		; CH > 'z'
-     994/    7027 : 001276              	TAD	L 'Z'
-     995/    7030 : 003144              	DCA	CH
-     996/    7031 : 005614              	JMP	I UPPER
-     997/    7032 :                     
-     998/    7032 :                     RDOCT:
-     999/    7032 : 000000              	DC	0
-    1000/    7033 : 007200              	CLA
-    1001/    7034 : 003145              	DCA	CNT
-    1002/    7035 : 003146              	DCA	VAL
-    1003/    7036 :                     RO0:
-    1004/    7036 : 007200              	CLA
-    1005/    7037 : (MACRO)              	TAD_I_00017
-    1005/    7037 : =>TRUE                       IF USE_CP
-    1005/    7037 : 004151                      JMS TAD_I_17_PAGE0
-    1005/    7040 : =>FALSE                      ELSE
-    1005/    7040 :                             TAD I 00017
-    1005/    7040 : [1005]                       ENDIF
-    1006/    7040 : 003144              	DCA	CH
-    1007/    7041 : 004214              	JMS	UPPER
-    1008/    7042 : 007200              	CLA
-    1009/    7043 : 001144              	TAD	CH
-    1010/    7044 : 001277              	TAD	L -'9'
-    1011/    7045 : 007540              	SMA SZA
-    1012/    7046 : 005267              	JMP	ROE		; CH > '9'
-    1013/    7047 : 007200              	CLA
-    1014/    7050 : 001144              	TAD	CH
-    1015/    7051 : 001300              	TAD	L -'0'
-    1016/    7052 : 007510              	SPA
-    1017/    7053 : 005267              	JMP	ROE		; CH < '0'
-    1018/    7054 : 000301              	AND	L 00007
-    1019/    7055 : 003144              	DCA	CH
-    1020/    7056 : 001146              	TAD	VAL
-    1021/    7057 : 007004              	RAL
-    1022/    7060 : 007006              	RTL
-    1023/    7061 : 000302              	AND	L 07770
-    1024/    7062 : 001144              	TAD	CH
-    1025/    7063 : 003146              	DCA	VAL
- AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 20 - 2026年02月02日 19時36分18秒
+     975/    7000 : 000000              	DC	0
+     976/    7001 :                     SS0:
+     977/    7001 : 007200              	CLA
+     978/    7002 : (MACRO)              	TAD_I_00017
+     978/    7002 : =>TRUE                       IF USE_CP
+     978/    7002 : 004151                      JMS TAD_I_17_PAGE0
+     978/    7003 : =>FALSE                      ELSE
+     978/    7003 :                             TAD I 00017
+     978/    7003 : [978]                        ENDIF
+     979/    7003 : 003144              	DCA	CH
+     980/    7004 : 001144              	TAD	CH
+     981/    7005 : 001273              	TAD	L -' '
+     982/    7006 : 007450              	SNA
+     983/    7007 : 005201              	JMP	SS0
+     984/    7010 : 007240              	CLA CMA			; AC=-1
+     985/    7011 : 001017              	TAD	00017
+     986/    7012 : 003017              	DCA	00017
+     987/    7013 : 005600              	JMP	I SKIPSP
+     988/    7014 :                     
+     989/    7014 :                     UPPER:
+     990/    7014 : 000000              	DC	0
+     991/    7015 : 007200              	CLA
+     992/    7016 : 001144              	TAD	CH
+     993/    7017 : 001274              	TAD	L -'a'
+     994/    7020 : 007510              	SPA
+     995/    7021 : 005614              	JMP	I UPPER		; CH < 'a'
+     996/    7022 : 007200              	CLA
+     997/    7023 : 001144              	TAD	CH
+     998/    7024 : 001275              	TAD	L -'z'
+     999/    7025 : 007540              	SMA SZA
+    1000/    7026 : 005614              	JMP	I UPPER		; CH > 'z'
+    1001/    7027 : 001276              	TAD	L 'Z'
+    1002/    7030 : 003144              	DCA	CH
+    1003/    7031 : 005614              	JMP	I UPPER
+    1004/    7032 :                     
+    1005/    7032 :                     RDOCT:
+    1006/    7032 : 000000              	DC	0
+    1007/    7033 : 007200              	CLA
+    1008/    7034 : 003145              	DCA	CNT
+    1009/    7035 : 003146              	DCA	VAL
+    1010/    7036 :                     RO0:
+    1011/    7036 : 007200              	CLA
+    1012/    7037 : (MACRO)              	TAD_I_00017
+    1012/    7037 : =>TRUE                       IF USE_CP
+    1012/    7037 : 004151                      JMS TAD_I_17_PAGE0
+    1012/    7040 : =>FALSE                      ELSE
+    1012/    7040 :                             TAD I 00017
+    1012/    7040 : [1012]                       ENDIF
+    1013/    7040 : 003144              	DCA	CH
+    1014/    7041 : 004214              	JMS	UPPER
+    1015/    7042 : 007200              	CLA
+    1016/    7043 : 001144              	TAD	CH
+    1017/    7044 : 001277              	TAD	L -'9'
+    1018/    7045 : 007540              	SMA SZA
+    1019/    7046 : 005267              	JMP	ROE		; CH > '9'
+    1020/    7047 : 007200              	CLA
+    1021/    7050 : 001144              	TAD	CH
+    1022/    7051 : 001300              	TAD	L -'0'
+    1023/    7052 : 007510              	SPA
+    1024/    7053 : 005267              	JMP	ROE		; CH < '0'
+ AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 20 - 2026年02月02日 20時16分21秒
 
 
-    1026/    7064 : 002145              	ISZ	CNT
-    1027/    7065 : 007000              	NOP
-    1028/    7066 : 005236              	JMP	RO0
-    1029/    7067 :                     ROE:
-    1030/    7067 : 007240              	CLA CMA
-    1031/    7070 : 001017              	TAD	00017
-    1032/    7071 : 003017              	DCA	00017
-    1033/    7072 : 005632              	JMP	I RDOCT
-    1034/    7073 :                     
-    1035/    7073 : 007740 007637       	LTORG
+    1025/    7054 : 000301              	AND	L 00007
+    1026/    7055 : 003144              	DCA	CH
+    1027/    7056 : 001146              	TAD	VAL
+    1028/    7057 : 007004              	RAL
+    1029/    7060 : 007006              	RTL
+    1030/    7061 : 000302              	AND	L 07770
+    1031/    7062 : 001144              	TAD	CH
+    1032/    7063 : 003146              	DCA	VAL
+    1033/    7064 : 002145              	ISZ	CNT
+    1034/    7065 : 007000              	NOP
+    1035/    7066 : 005236              	JMP	RO0
+    1036/    7067 :                     ROE:
+    1037/    7067 : 007240              	CLA CMA
+    1038/    7070 : 001017              	TAD	00017
+    1039/    7071 : 003017              	DCA	00017
+    1040/    7072 : 005632              	JMP	I RDOCT
+    1041/    7073 :                     
+    1042/    7073 : 007740 007637       	LTORG
              7075 : 007606 000132 
              7077 : 007707 007720 
              7101 : 000007 007770     
-    1036/    7103 :                     
-    1037/    7103 : =>TRUE               	IF USE_CP		
-    1038/    7103 :                     	;; STROUT and string data shold be in the same page
-    1039/    7103 :                     	;; for pseudo indirect addressing on CP Memory
-    1040/    7103 :                     	ALIGN	128
-    1041/    7200 :                     STROUT:	
-    1042/    7200 : 000000              	DC	0
-    1043/    7201 : 007200              	CLA
-    1044/    7202 :                     STRO0:
-    1045/    7202 :                     ;;;  	TAD	I 00017 (for non zero local page)
-    1046/    7202 :                     	;; modified for CP 
-    1047/    7202 : 001417               	TAD	I 00017		; just for increment pointer
-    1048/    7203 : 007200              	CLA
-    1049/    7204 : 001017               	TAD	00017		; read the pointer
-    1050/    7205 : 000366              	AND     L 00177  	; make local address
-    1051/    7206 : 001367              	TAD	L 01200		; make a local read instruction
-    1052/    7207 : 003210              	DCA     .+1		; deposit the instruction 'TAD'
-    1053/    7210 : 007000              	NOP			; here is the instruction
-    1054/    7211 :                     	;; 
-    1055/    7211 : 007450              	SNA
-    1056/    7212 : 005600              	JMP	I STROUT	; Return
-    1057/    7213 : 003144              	DCA	CH
-    1058/    7214 : 004502              	JMS	I C_CONOUT
-    1059/    7215 : 005202              	JMP	STRO0
-    1060/    7216 : [1037]               	ENDIF ; USE_CP
-    1061/    7216 :                     
-    1062/    7216 : =>TRUE               	IF USE_TANGNANO 	; show progress
-    1063/    7216 :                     OUT0017:
-    1064/    7216 : 000000              	DC	0
-    1065/    7217 : 007200              	CLA
-    1066/    7220 : 001017              	TAD	00017
-    1067/    7221 : 003146              	DCA	VAL
-    1068/    7222 : 004514              	JMS	I C_OCTOUT4
-    1069/    7223 : 004515              	JMS	I C_CRLF
-    1070/    7224 : 005616              	JMP	I OUT0017	; Return
-    1071/    7225 :                     	;; 
-    1072/    7225 : [1062]               	ENDIF
-    1073/    7225 :                     	
-    1074/    7225 :                     OPNMSG:
-    1075/    7225 : =>TRUE               	IF USE_CP
-    1076/    7225 : 000015 000012               DC      CR LF "Universal Monitor IM6100 (Control Panel)" CR LF 0
+    1043/    7103 :                     
+    1044/    7103 : =>TRUE               	IF USE_CP		
+    1045/    7103 :                     	;; STROUT and string data shold be in the same page
+    1046/    7103 :                     	;; for pseudo indirect addressing on CP Memory
+    1047/    7103 :                     	ALIGN	128
+    1048/    7200 :                     STROUT:	
+    1049/    7200 : 000000              	DC	0
+    1050/    7201 : 007200              	CLA
+    1051/    7202 :                     STRO0:
+    1052/    7202 :                     ;;;  	TAD	I 00017 (for non zero local page)
+    1053/    7202 :                     	;; modified for CP 
+    1054/    7202 : 001417               	TAD	I 00017		; just for increment pointer
+    1055/    7203 : 007200              	CLA
+    1056/    7204 : 001017               	TAD	00017		; read the pointer
+    1057/    7205 : 000373              	AND     L 00177  	; make local address
+    1058/    7206 : 001374              	TAD	L 01200		; make a local read instruction
+    1059/    7207 : 003210              	DCA     .+1		; deposit the instruction 'TAD'
+    1060/    7210 : 007000              	NOP			; here is the instruction
+    1061/    7211 :                     	;; 
+    1062/    7211 : 007450              	SNA
+    1063/    7212 : 005600              	JMP	I STROUT	; Return
+    1064/    7213 : 003144              	DCA	CH
+    1065/    7214 : 004502              	JMS	I C_CONOUT
+    1066/    7215 : 005202              	JMP	STRO0
+    1067/    7216 : [1044]               	ENDIF ; USE_CP
+    1068/    7216 :                     
+    1069/    7216 : =>TRUE               	IF USE_TANGNANO 	; show progress
+    1070/    7216 :                     OUT0017:
+    1071/    7216 : 000000              	DC	0
+    1072/    7217 : 007200              	CLA
+    1073/    7220 : 001017              	TAD	00017
+    1074/    7221 : 003146              	DCA	VAL
+    1075/    7222 : 004514              	JMS	I C_OCTOUT4
+    1076/    7223 : 004515              	JMS	I C_CRLF
+    1077/    7224 : 005616              	JMP	I OUT0017	; Return
+    1078/    7225 :                     	;; 
+    1079/    7225 : [1069]               	ENDIF
+    1080/    7225 :                     	
+    1081/    7225 :                     OPNMSG:
+ AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 21 - 2026年02月02日 20時16分21秒
+
+
+    1082/    7225 : =>TRUE               	IF USE_CP
+    1083/    7225 : 000015 000012               DC      CR LF "Universal Monitor IM6100 (Control Panel)" CR LF 0
              7227 : 000125 000156 
              7231 : 000151 000166 
              7233 : 000145 000162 
              7235 : 000163 000141 
              7237 : 000154 000040 
              7241 : 000115 000157 
- AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 21 - 2026年02月02日 19時36分18秒
-
-
              7243 : 000156 000151 
              7245 : 000164 000157 
              7247 : 000162 000040 
@@ -1277,63 +1285,66 @@
              7275 : 000154 000051 
              7277 : 000015 000012 
              7301 : 000000             
-    1077/    7302 : =>FALSE              	ELSE
-    1078/    7302 :                             DC      CR LF "Universal Monitor IM6100" CR LF 0
-    1079/    7302 : [1075]               	ENDIF
-    1080/    7302 :                     
-    1081/    7302 :                     PROMPT:
-    1082/    7302 : 000135 000040       	DC	"] " 0
+    1084/    7302 : =>FALSE              	ELSE
+    1085/    7302 :                             DC      CR LF "Universal Monitor IM6100" CR LF 0
+    1086/    7302 : [1082]               	ENDIF
+    1087/    7302 :                     
+    1088/    7302 :                     PROMPT:
+    1089/    7302 : 000135 000040       	DC	"] " 0
              7304 : 000000             
-    1083/    7305 :                     IHEMSG:
-    1084/    7305 : 000105 000162       	DC	"Error ihex" CR LF 0
+    1090/    7305 :                     IHEMSG:
+    1091/    7305 : 000105 000162       	DC	"Error ihex" CR LF 0
              7307 : 000162 000157 
              7311 : 000162 000040 
              7313 : 000151 000150 
              7315 : 000145 000170 
              7317 : 000015 000012 
              7321 : 000000             
-    1085/    7322 :                     ERRMSG:
-    1086/    7322 : 000105 000162       	DC	"Error" CR LF 0
+    1092/    7322 :                     ERRMSG:
+    1093/    7322 : 000105 000162       	DC	"Error" CR LF 0
              7324 : 000162 000157 
              7326 : 000162 000015 
              7330 : 000012 000000     
-    1087/    7332 :                     DSEP0:
-    1088/    7332 : 000040 000072       	DC	" :" 0
+    1094/    7332 :                     DSEP0:
+    1095/    7332 : 000040 000072       	DC	" :" 0
              7334 : 000000             
-    1089/    7335 :                     DSEP1:
-    1090/    7335 : 000040 000072       	DC	" : " 0
+    1096/    7335 :                     DSEP1:
+    1097/    7335 : 000040 000072       	DC	" : " 0
              7337 : 000040 000000     
-    1091/    7341 :                     DSEP2:
-    1092/    7341 : 000040 000040       	DC	"    " 0
+    1098/    7341 :                     DSEP2:
+    1099/    7341 : 000040 000040       	DC	"    " 0
              7343 : 000040 000040 
              7345 : 000000             
-    1093/    7346 :                     	
-    1094/    7346 : =>TRUE               	IF USE_TANGNANO
-    1095/    7346 : 000101 000103       STRACC:	DC	"AC=" 0
+    1100/    7346 :                     	
+    1101/    7346 : =>TRUE               	IF USE_TANGNANO
+    1102/    7346 : 000101 000103       STRACC:	DC	"AC=" 0
              7350 : 000075 000000     
-    1096/    7352 : 000040 000106       STRFLG:	DC	" FLG,IF,DF=" 0
+    1103/    7352 : 000040 000106       STRFLG:	DC	" FLG,IF,DF=" 0
              7354 : 000114 000107 
+ AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 22 - 2026年02月02日 20時16分21秒
+
+
              7356 : 000054 000111 
              7360 : 000106 000054 
              7362 : 000104 000106 
              7364 : 000075 000000     
-    1097/    7366 : [1094]               	ENDIF
-    1098/    7366 :                     
-    1099/    7366 : =>TRUE               	IF USE_CP
-    1100/    7366 : 000177 001200       	LTORG
- AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 22 - 2026年02月02日 19時36分18秒
-
-
-    1101/    7370 : [1099]               	ENDIF
-    1102/    7370 :                     	
-    1103/    7370 :                     	ALIGN	128
-    1104/    7400 :                     
-    1105/    7400 : =>FALSE              	IF USE_DEV_EMILY
-    1106/    7400 :                     	INCLUDE	"dev/dev_emily.asm"
-    1107/    7400 : [1105]               	ENDIF
-    1108/    7400 :                     
-    1109/    7400 : =>TRUE               	IF USE_TANGNANO
-    1110/    7400 :                     	INCLUDE	"dev/dev_tangnano.asm"
+    1104/    7366 : 000040 000123       STRSR:	DC	" SR=" 0
+             7370 : 000122 000075 
+             7372 : 000000             
+    1105/    7373 : [1101]               	ENDIF
+    1106/    7373 :                     
+    1107/    7373 : =>TRUE               	IF USE_CP
+    1108/    7373 : 000177 001200       	LTORG
+    1109/    7375 : [1107]               	ENDIF
+    1110/    7375 :                     	
+    1111/    7375 :                     	ALIGN	128
+    1112/    7400 :                     
+    1113/    7400 : =>FALSE              	IF USE_DEV_EMILY
+    1114/    7400 :                     	INCLUDE	"dev/dev_emily.asm"
+    1115/    7400 : [1113]               	ENDIF
+    1116/    7400 :                     
+    1117/    7400 : =>TRUE               	IF USE_TANGNANO
+    1118/    7400 :                     	INCLUDE	"dev/dev_tangnano.asm"
 (1)    1/    7400 :                     ;;;
 (1)    2/    7400 :                     ;;;	Tang Nano Console Driver
 (1)    3/    7400 :                     ;;;
@@ -1373,6 +1384,9 @@
 (1)   34/    7407 : 005206              	JMP    	CIN0
 (1)   35/    7410 : (MACRO)              	KRB
 (1)   35/    7410 : 006036                      DC 006036
+ AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm(dev_tangnano.asm) - Page 23 - 2026年02月02日 20時16分21秒
+
+
 (1)   36/    7411 : 000233              	AND	MASK7
 (1)   37/    7412 : 003144               	DCA	CH
 (1)   38/    7413 : 005605              	JMP	I CONIN
@@ -1384,9 +1398,6 @@
 (1)   43/    7417 : 006031                      DC 006031
 (1)   44/    7420 : 007200              	CLA
 (1)   45/    7421 : 003144               	DCA	CH
- AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm(dev_tangnano.asm) - Page 23 - 2026年02月02日 19時36分18秒
-
-
 (1)   46/    7422 : 005614              	JMP	I CONST
 (1)   47/    7423 :                     
 (1)   48/    7423 : 000000              CONOUT:	DC	0
@@ -1404,69 +1415,69 @@
 (1)   58/    7433 : 000177              MASK7:	DC	0177
 (1)   59/    7434 :                     	
 (1)   60/    7434 :                     
-    1111/    7434 : [1109]               	ENDIF
-    1112/    7434 :                     
-    1113/    7434 :                     	;;
-    1114/    7434 :                     	;; Reset entry point
-    1115/    7434 :                     	;;
-    1116/    7434 :                     
-    1117/    7776 :                     	ORG	07776
-    1118/    7776 :                     
-    1119/    7776 : 005000              	DC	CSTART
-    1120/    7777 : 005776              	JMP	I .-1
-    1121/   10000 :                     
-    1122/   10000 :                     	;;
-    1123/   10000 :                     	;; Work Area
-    1124/   10000 :                     	;;
-    1125/   10000 :                     
-    1126/     120 :                     	ORG	WORK_B
-    1127/     120 :                     
-    1128/     120 :                     INBUF:	DS	16
-    1129/     140 :                     DSADDR:	DS	1
-    1130/     141 :                     DEADDR:	DS	1
-    1131/     142 :                     SADDR:	DS	1
-    1132/     143 :                     GADDR:	DS	1
-    1133/     144 :                     
-    1134/     144 :                     CH:	DS	1
-    1135/     145 :                     CNT:	DS	1
-    1136/     146 :                     VAL:	DS	1
-    1137/     147 :                     FLAG:	DS	1
-    1138/     150 :                     SUM:	DS	1
-    1139/     151 :                     
-    1140/     151 : =>TRUE               	IF USE_CP
-    1141/     151 :                     	;; following routines should be in Page 0
-    1142/     151 :                     TAD_I_17_PAGE0:
-    1143/     151 :                     	;; emulate TAD I 00017 (pointer points zeropage)
-    1144/     151 : 000000              	DC	0
-    1145/     152 : 001417              	TAD	I 00017	; just for increment pointer
-    1146/     153 : 007200              	CLA
-    1147/     154 : 001017              	TAD	00017	; read the pointer (zero page)
-    1148/     155 : 001173              	TAD	L 01000	; make a read instruction 'TAD'
-    1149/     156 : 003157              	DCA	.+1	; deposit the instruction
-    1150/     157 : 007000              	NOP		; here is the instruction
-    1151/     160 : 005551              	JMP	I TAD_I_17_PAGE0
-    1152/     161 :                     	
-    1153/     161 :                     DCA_I_17_PAGE0:
- AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 24 - 2026年02月02日 19時36分18秒
+    1119/    7434 : [1117]               	ENDIF
+    1120/    7434 :                     
+    1121/    7434 :                     	;;
+    1122/    7434 :                     	;; Reset entry point
+    1123/    7434 :                     	;;
+    1124/    7434 :                     
+    1125/    7776 :                     	ORG	07776
+    1126/    7776 :                     
+    1127/    7776 : 005000              	DC	CSTART
+    1128/    7777 : 005776              	JMP	I .-1
+    1129/   10000 :                     
+    1130/   10000 :                     	;;
+    1131/   10000 :                     	;; Work Area
+    1132/   10000 :                     	;;
+    1133/   10000 :                     
+    1134/     120 :                     	ORG	WORK_B
+    1135/     120 :                     
+    1136/     120 :                     INBUF:	DS	16
+    1137/     140 :                     DSADDR:	DS	1
+    1138/     141 :                     DEADDR:	DS	1
+    1139/     142 :                     SADDR:	DS	1
+    1140/     143 :                     GADDR:	DS	1
+    1141/     144 :                     
+    1142/     144 :                     CH:	DS	1
+    1143/     145 :                     CNT:	DS	1
+    1144/     146 :                     VAL:	DS	1
+    1145/     147 :                     FLAG:	DS	1
+    1146/     150 :                     SUM:	DS	1
+    1147/     151 :                     
+    1148/     151 : =>TRUE               	IF USE_CP
+    1149/     151 :                     	;; following routines should be in Page 0
+    1150/     151 :                     TAD_I_17_PAGE0:
+ AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 24 - 2026年02月02日 20時16分21秒
 
 
-    1154/     161 :                     	;; emulate DCA I 00017 (pointer points zeropage)
-    1155/     161 : 000000              	DC	0
-    1156/     162 : 007421              	MQL		; save AC to MQ
-    1157/     163 : 001417              	TAD	I 00017	; just for increment pointer
-    1158/     164 : 007200              	CLA
-    1159/     165 : 001017              	TAD	00017	; read the pointer (zero page)
-    1160/     166 : 001174              	TAD	L 03000	; make a read instruction 'DCA'
-    1161/     167 : 003171              	DCA	.+2	; deposit the instruction
-    1162/     170 : 007501              	MQA		; restore AC from MQ
-    1163/     171 : 007000              	NOP		; here is the instruction
-    1164/     172 : 005561              	JMP	I DCA_I_17_PAGE0
-    1165/     173 :                     	
-    1166/     173 : 001000 003000       	LTORG
-    1167/     175 : [1140]               	ENDIF
-    1168/     175 :                     	
-    1169/     175 :                     	END
- AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 25 - 2026年02月02日 19時36分18秒
+    1151/     151 :                     	;; emulate TAD I 00017 (pointer points zeropage)
+    1152/     151 : 000000              	DC	0
+    1153/     152 : 001417              	TAD	I 00017	; just for increment pointer
+    1154/     153 : 007200              	CLA
+    1155/     154 : 001017              	TAD	00017	; read the pointer (zero page)
+    1156/     155 : 001173              	TAD	L 01000	; make a read instruction 'TAD'
+    1157/     156 : 003157              	DCA	.+1	; deposit the instruction
+    1158/     157 : 007000              	NOP		; here is the instruction
+    1159/     160 : 005551              	JMP	I TAD_I_17_PAGE0
+    1160/     161 :                     	
+    1161/     161 :                     DCA_I_17_PAGE0:
+    1162/     161 :                     	;; emulate DCA I 00017 (pointer points zeropage)
+    1163/     161 : 000000              	DC	0
+    1164/     162 : 007421              	MQL		; save AC to MQ
+    1165/     163 : 001417              	TAD	I 00017	; just for increment pointer
+    1166/     164 : 007200              	CLA
+    1167/     165 : 001017              	TAD	00017	; read the pointer (zero page)
+    1168/     166 : 001174              	TAD	L 03000	; make a read instruction 'DCA'
+    1169/     167 : 003171              	DCA	.+2	; deposit the instruction
+    1170/     170 : 007501              	MQA		; restore AC from MQ
+    1171/     171 : 007000              	NOP		; here is the instruction
+    1172/     172 : 005561              	JMP	I DCA_I_17_PAGE0
+    1173/     173 :                     	
+    1174/     173 : 001000 003000       	LTORG
+    1175/     175 : [1148]               	ENDIF
+    1176/     175 :                     	
+    1177/     175 :                     	END
+ AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 25 - 2026年02月02日 20時16分21秒
 
 
   Symbol Table (* = unused):
@@ -1499,8 +1510,8 @@
  DSEP1 :                       7335 C |  DSEP2 :                       7341 C |
  DUMP :                        5400 C |  ENTRY :                        100 - |
  ERR :                         5111 C |  ERRMSG :                      7322 C |
-*FALSE :                          0 - |  FIELD :                       5236 C |
- FLAG :                         147 C |  FLD1 :                        5263 C |
+*FALSE :                          0 - |  FIELD :                       5247 C |
+ FLAG :                         147 C |  FLD1 :                        5274 C |
 *FULLPMMU :                       1 - |  G1 :                          6016 C |
  GADDR :                        143 C |  GETLIN :                      6646 C |
  GL0 :                         6653 C |  GLB :                         6715 C |
@@ -1517,85 +1528,86 @@
  LHI00 :                       6511 C |  LHI1 :                        6516 C |
  LHI2 :                        6543 C |  LHI3 :                        6545 C |
  LHIE :                        6562 C | *LISTON :                         1 - |
- LITERAL_F_0_1 :               5120 C |  LITERAL_F_10_1 :              5541 C |
- LITERAL_F_11_1 :              5647 C |  LITERAL_F_12_1 :              6143 C |
- LITERAL_F_13_1 :              6145 C |  LITERAL_F_14_1 :              6575 C |
- LITERAL_F_15_1 :              6576 C |  LITERAL_F_16_1 :              6753 C |
- LITERAL_F_1_1 :               5122 C |  LITERAL_F_2_1 :               5124 C |
- LITERAL_F_3_1 :               5125 C |  LITERAL_F_4_1 :               5126 C |
- LITERAL_F_5_1 :               5130 C |  LITERAL_F_6_1 :               5132 C |
- LITERAL_F_7_1 :               5134 C |  LITERAL_F_8_1 :               5136 C |
- LITERAL_F_9_1 :               5140 C |  LITERAL_F_A_1 :               5142 C |
- LITERAL_F_B_1 :               5143 C |  LITERAL_F_C_1 :               5144 C |
- LITERAL_F_D_1 :               5310 C |  LITERAL_F_E_1 :               5311 C |
- LITERAL_F_F_1 :               5540 C |  LITERAL_W_000_1 :             5121 C |
- AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 26 - 2026年02月02日 19時36分18秒
+ LITERAL_F_0_1 :               5120 C |  LITERAL_F_10_1 :              5540 C |
+ LITERAL_F_11_1 :              5541 C |  LITERAL_F_12_1 :              5647 C |
+ LITERAL_F_13_1 :              6143 C |  LITERAL_F_14_1 :              6145 C |
+ LITERAL_F_15_1 :              6575 C |  LITERAL_F_16_1 :              6576 C |
+ LITERAL_F_17_1 :              6753 C |  LITERAL_F_1_1 :               5122 C |
+ LITERAL_F_2_1 :               5124 C |  LITERAL_F_3_1 :               5125 C |
+ LITERAL_F_4_1 :               5126 C |  LITERAL_F_5_1 :               5130 C |
+ LITERAL_F_6_1 :               5132 C |  LITERAL_F_7_1 :               5134 C |
+ LITERAL_F_8_1 :               5136 C |  LITERAL_F_9_1 :               5140 C |
+ LITERAL_F_A_1 :               5142 C |  LITERAL_F_B_1 :               5143 C |
+ LITERAL_F_C_1 :               5144 C |  LITERAL_F_D_1 :               5314 C |
+ LITERAL_F_E_1 :               5315 C |  LITERAL_F_F_1 :               5316 C |
+ AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 26 - 2026年02月02日 20時16分21秒
 
 
- LITERAL_W_002_1 :             6756 C |  LITERAL_W_003_1 :             6571 C |
- LITERAL_W_003_2 :             6755 C |  LITERAL_W_007_1 :             5135 C |
- LITERAL_W_007_2 :             6747 C |  LITERAL_W_007_3 :             7101 C |
- LITERAL_W_008_1 :             6763 C |  LITERAL_W_00A_1 :             6752 C |
- LITERAL_W_00D_1 :             6751 C |  LITERAL_W_011_1 :             5141 C |
- LITERAL_W_020_1 :             5646 C |  LITERAL_W_020_2 :             6144 C |
- LITERAL_W_020_3 :             6764 C |  LITERAL_W_02C_1 :             5534 C |
- LITERAL_W_030_1 :             5123 C |  LITERAL_W_030_2 :             6750 C |
- LITERAL_W_038_1 :             5312 C |  LITERAL_W_038_2 :             6140 C |
- LITERAL_W_040_1 :             5532 C |  LITERAL_W_05A_1 :             7076 C |
- LITERAL_W_05F_1 :             6760 C |  LITERAL_W_07F_1 :             7366 C |
- LITERAL_W_0FF_1 :             6574 C |  LITERAL_W_200_1 :              173 C |
- LITERAL_W_280_1 :             7367 C |  LITERAL_W_600_1 :              174 C |
- LITERAL_W_C80_1 :             6572 C |  LITERAL_W_C81_1 :             5117 C |
- LITERAL_W_C81_2 :             5313 C |  LITERAL_W_C81_3 :             6141 C |
- LITERAL_W_C82_1 :             6142 C |  LITERAL_W_F00_1 :             6573 C |
- LITERAL_W_F86_1 :             7075 C |  LITERAL_W_F89_1 :             6757 C |
- LITERAL_W_F9F_1 :             7074 C |  LITERAL_W_FA0_1 :             6761 C |
- LITERAL_W_FBC_1 :             5127 C |  LITERAL_W_FC0_1 :             5116 C |
- LITERAL_W_FC6_1 :             6567 C |  LITERAL_W_FC7_1 :             7077 C |
- LITERAL_W_FC9_1 :             6252 C |  LITERAL_W_FD0_1 :             6246 C |
- LITERAL_W_FD0_2 :             7100 C |  LITERAL_W_FD3_1 :             6146 C |
- LITERAL_W_FD4_1 :             5533 C |  LITERAL_W_FE0_1 :             7073 C |
- LITERAL_W_FF1_1 :             6762 C |  LITERAL_W_FF3_1 :             6570 C |
- LITERAL_W_FF3_2 :             6754 C |  LITERAL_W_FF4_1 :             5133 C |
- LITERAL_W_FF5_1 :             5137 C |  LITERAL_W_FF6_1 :             6247 C |
- LITERAL_W_FF8_1 :             5535 C |  LITERAL_W_FF8_2 :             7102 C |
- LITERAL_W_FF9_1 :             6250 C |  LITERAL_W_FFA_1 :             6251 C |
- LITERAL_W_FFD_1 :             5131 C |  LITERAL_W_FFE_1 :             5537 C |
- LITERAL_W_FFF_1 :             5536 C |  LITERAL_W_FFF_2 :             6147 C |
- LOADH :                       6400 C | *MACEXP :                         7 - |
- MASK7 :                       7433 C | *MOMCPU :                     60400 - |
-*MOMCPUNAME :                "6100" - | *NESTMAX :                      400 - |
- OCTOUT2 :                     6600 C |  OCTOUT4 :                     6620 C |
- OPNMSG :                      7225 C |  OUT0017 :                     7216 C |
-*PADDING :                        1 - |  PROG_B :                      5000 - |
- PROMPT :                      7302 C |  RDOCT :                       7032 C |
- REG :                         5200 C | *RELAXED :                        0 - |
- RO0 :                         7036 C |  ROE :                         7067 C |
- SADDR :                        142 C |  SETM :                        6040 C |
- SHOWREG :                     5216 C |  SKIPSP :                      7000 C |
- SM0 :                         6056 C |  SM1 :                         6056 C |
- SM2 :                         6112 C |  SM3 :                         6121 C |
- SM4 :                         6125 C |  SS0 :                         7001 C |
- STRACC :                      7346 C |  STRFLG :                      7352 C |
- STRO0 :                       7202 C |  STROUT :                      7200 C |
- SUM :                          150 C |  SW1 :                         5302 C |
- SWREG :                       5264 C |  S_AC :                           1 C |
+ LITERAL_W_000_1 :             5121 C |  LITERAL_W_002_1 :             6756 C |
+ LITERAL_W_003_1 :             6571 C |  LITERAL_W_003_2 :             6755 C |
+ LITERAL_W_007_1 :             5135 C |  LITERAL_W_007_2 :             6747 C |
+ LITERAL_W_007_3 :             7101 C |  LITERAL_W_008_1 :             6763 C |
+ LITERAL_W_00A_1 :             6752 C |  LITERAL_W_00D_1 :             6751 C |
+ LITERAL_W_011_1 :             5141 C |  LITERAL_W_020_1 :             5646 C |
+ LITERAL_W_020_2 :             6144 C |  LITERAL_W_020_3 :             6764 C |
+ LITERAL_W_02C_1 :             5534 C |  LITERAL_W_030_1 :             5123 C |
+ LITERAL_W_030_2 :             6750 C |  LITERAL_W_038_1 :             5317 C |
+ LITERAL_W_038_2 :             6140 C |  LITERAL_W_040_1 :             5532 C |
+ LITERAL_W_05A_1 :             7076 C |  LITERAL_W_05F_1 :             6760 C |
+ LITERAL_W_07F_1 :             7373 C |  LITERAL_W_0FF_1 :             6574 C |
+ LITERAL_W_200_1 :              173 C |  LITERAL_W_280_1 :             7374 C |
+ LITERAL_W_600_1 :              174 C |  LITERAL_W_C80_1 :             6572 C |
+ LITERAL_W_C81_1 :             5117 C |  LITERAL_W_C81_2 :             5320 C |
+ LITERAL_W_C81_3 :             6141 C |  LITERAL_W_C82_1 :             6142 C |
+ LITERAL_W_F00_1 :             6573 C |  LITERAL_W_F86_1 :             7075 C |
+ LITERAL_W_F89_1 :             6757 C |  LITERAL_W_F9F_1 :             7074 C |
+ LITERAL_W_FA0_1 :             6761 C |  LITERAL_W_FBC_1 :             5127 C |
+ LITERAL_W_FC0_1 :             5116 C |  LITERAL_W_FC6_1 :             6567 C |
+ LITERAL_W_FC7_1 :             7077 C |  LITERAL_W_FC9_1 :             6252 C |
+ LITERAL_W_FD0_1 :             6246 C |  LITERAL_W_FD0_2 :             7100 C |
+ LITERAL_W_FD3_1 :             6146 C |  LITERAL_W_FD4_1 :             5533 C |
+ LITERAL_W_FE0_1 :             7073 C |  LITERAL_W_FF1_1 :             6762 C |
+ LITERAL_W_FF3_1 :             6570 C |  LITERAL_W_FF3_2 :             6754 C |
+ LITERAL_W_FF4_1 :             5133 C |  LITERAL_W_FF5_1 :             5137 C |
+ LITERAL_W_FF6_1 :             6247 C |  LITERAL_W_FF8_1 :             5535 C |
+ LITERAL_W_FF8_2 :             7102 C |  LITERAL_W_FF9_1 :             6250 C |
+ LITERAL_W_FFA_1 :             6251 C |  LITERAL_W_FFD_1 :             5131 C |
+ LITERAL_W_FFE_1 :             5537 C |  LITERAL_W_FFF_1 :             5536 C |
+ LITERAL_W_FFF_2 :             6147 C |  LOADH :                       6400 C |
+*MACEXP :                         7 - |  MASK7 :                       7433 C |
+*MOMCPU :                     60400 - | *MOMCPUNAME :                "6100" - |
+*NESTMAX :                      400 - |  OCTOUT2 :                     6600 C |
+ OCTOUT4 :                     6620 C |  OPNMSG :                      7225 C |
+ OUT0017 :                     7216 C | *PADDING :                        1 - |
+ PROG_B :                      5000 - |  PROMPT :                      7302 C |
+ RDOCT :                       7032 C |  REG :                         5200 C |
+*RELAXED :                        0 - |  RO0 :                         7036 C |
+ ROE :                         7067 C |  SADDR :                        142 C |
+ SETM :                        6040 C |  SHOWREG :                     5216 C |
+ SKIPSP :                      7000 C |  SM0 :                         6056 C |
+ SM1 :                         6056 C |  SM2 :                         6112 C |
+ SM3 :                         6121 C |  SM4 :                         6125 C |
+ SS0 :                         7001 C |  STRACC :                      7346 C |
+ STRFLG :                      7352 C |  STRO0 :                       7202 C |
+ STROUT :                      7200 C |  STRSR :                       7366 C |
+ SUM :                          150 C |  SW1 :                         5313 C |
+ SWREG :                       5275 C |  S_AC :                           1 C |
  S_FLAGS :                        2 C |  S_PC :                           0 C |
  TAD_I_17_PAGE0 :               151 C |
-*TIME :               "19\-026\-103\-12636\-027\-120\-12218\-025\-089\-110" - |
+*TIME :               "20\-026\-103\-12616\-027\-120\-12221\-025\-089\-110" - |
 *TRUE :                           1 - |  UPPER :                       7014 C |
  USE_CP :                         1 - |  USE_DEV_EMILY :                  0 - |
  USE_HEXCMD :                     1 - |  USE_TANGNANO :                   1 - |
  VAL :                          146 C | *VERSION :                    12057 - |
  WORK_B :                       120 - |  WSTART :                      5046 C |
 
-    222 symbols
+    224 symbols
      23 unused symbols
+ AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 27 - 2026年02月02日 20時16分21秒
 
- AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 27 - 2026年02月02日 19時36分18秒
 
 
- AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 28 - 2026年02月02日 19時36分18秒
+ AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 28 - 2026年02月02日 20時16分21秒
 
 
   Defined Macros:
@@ -1609,7 +1621,7 @@ TLS                                   | TSF
 
      10 macros
 
- AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 29 - 2026年02月02日 19時36分18秒
+ AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 29 - 2026年02月02日 20時16分21秒
 
 
   Defined Functions:
@@ -1617,7 +1629,7 @@ TLS                                   | TSF
 
 HIGH                                  | LOW                                  
 
- AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 30 - 2026年02月02日 19時36分18秒
+ AS V1.42 Beta [Bld 236] - Source File unimon_im6100.asm - Page 30 - 2026年02月02日 20時16分21秒
 
 
   Code Pages:
@@ -1627,10 +1639,10 @@ STANDARD (0 changed characters)
 
 1 code page
 
-0.02 seconds assembly time
+0.19 seconds assembly time
 
-   1292 lines source file
-   1323 lines incl. macro expansions
+   1300 lines source file
+   1331 lines incl. macro expansions
       2 passes
       0 errors
       0 warnings
