@@ -8,3 +8,5 @@
 - 2026/02/01: HDLアップデート(version 20260201)
   - 紙テープエミュレータ実装
   - universal monitorにコマンド追加(Switch register, data field)
+- 2026/02/02: HDLアップデート(version 20260202)
+  - 割り込み時に拡張メモリのレジスタ(REG_IF, DF, IB)のクリアを追加

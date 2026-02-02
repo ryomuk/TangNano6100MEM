@@ -341,7 +341,7 @@ module sdtape
   wire [8:0] tape_buf_address = tape_address[8:0];
 
   // pseudo end of tape detect
-  parameter  EOT_SEQZERO = 12'd1024;
+  localparam  EOT_SEQZERO = 12'd1024;
   reg [11:0] cnt_seqzero;
   reg	     tape_eot;
   assign     o_tape_endoftape = tape_eot;

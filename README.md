@@ -10,13 +10,10 @@ This document is written mostly in Japanese, so please use machine translation i
 - "TangNano6100"だとTangNano上にIM6100を実装したみたいな名前になってしまうので，"MEM"を付けて"TangNano6100MEM"という名前になっています．
 - モニタプログラムとして，Haruo Asano氏による[Universal Monitor](https://electrelic.com/electrelic/node/1317)IM6100版をControl Panel空間で動くように改変したものを搭載しました．MITライセンスだったので，使用した部分のソースを同梱しています．
 
-## 最近の話題
+## 最近の主な話題
 - 2026/01/28: 初版公開
-  - PCB rev2.1
-  - HDL version 20260128
-- 2026/01/29: HDLアップデート(version 20260129)
-- 2026/02/01: HDLアップデート(version 20260201)
-  - 紙テープエミュレータ実装
+- 2026/02/01: version 20260201, 紙テープエミュレータ実装
+- 2026/02/02: version 20260202, 割り込み関連のバグ修正
   
 ## 主なファイル一覧
 ```
@@ -76,8 +73,8 @@ This document is written mostly in Japanese, so please use machine translation i
 
 ### 既知の問題
 - ステップ実行後に戻ってくるとおかしくなることがある．
-- OS/8版のFOCALが動かない．おそらく割り込み関連の問題．
-- ~~OS/8でDIR SYS: はできるが DIR RKA0: は止まる．~~ PDP/8ハンドブックの誤植が原因でした．RK_DONEフラグを修正したら動くようになりました．
+- ~~OS/8版のFOCALが動かない．おそらく割り込み関連の問題．~~ → やはり割り込みの問題でした．20260202版で修正して解決．
+- ~~OS/8でDIR SYS: はできるが DIR RKA0: は止まる．~~ → PDP/8ハンドブックの誤植が原因でした．RK_DONEフラグを修正したら動くようになりました．
 - ~~OS/8 BASICでSTRTRK.BAやSNOOPY.BAが動かない．~~ 動きました．
 
 ### 今後の予定，ToDo

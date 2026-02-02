@@ -2,7 +2,7 @@
 // TangNano6100MEM
 // Memory System and Peripherals for IM6100 using Tang Nano 20K
 //
-// version 20260201
+// version 20260202
 //
 // by Ryo Mukai
 //
@@ -21,6 +21,7 @@
 // 2026/01/29: - bug fixed (done flag of RK status register)
 //             - dbg_mode (slow clock and full instruction log) implemented
 // 2026/02/01: - paper tape emulator implimented
+// 2026/02/02: - bug fixed (clear REG_IF, DF, IB on INTGNT)
 //---------------------------------------------------------------------------
 
 `define USE_DBGLOG   // output debug information to DBG_TX
@@ -486,8 +487,12 @@ module top
   wire [2:0] IOT_N     = address[5:3];
   always @(posedge sys_clk or negedge RESET_n)
     if(~RESET_n)
-      {REG_IF, REG_DF, REG_IB, REG_IIFF} <= 0;
-    else if(dev_write) begin
+      {REG_IF, REG_DF, REG_IB, REG_SF, REG_IIFF} <= 0;
+    else if( posedge_INTGNT ) begin
+       {REG_IF, REG_DF, REG_IB} <= 0;
+       REG_SF <= {REG_IB, REG_DF};
+    end
+    else if( dev_write ) begin
        case( address )
 	 IOT_RTF: {REG_IB, REG_DF, REG_IIFF} <= {DXin[5:0],   1'b1};
 	 IOT_RMF: {REG_IB, REG_DF, REG_IIFF} <= {REG_SF[5:0], 1'b1};
@@ -513,12 +518,6 @@ module top
 //      if ((last_op == OP_JMS) | (last_op == OP_JMP))
 //	{REG_IF, REG_IIFF} <= {REG_IB, 1'b0};
   
-  always @(posedge sys_clk  or negedge RESET_n)
-    if( ~RESET_n )
-      REG_SF <= 0;
-    else if( posedge_INTGNT )
-      REG_SF <= {REG_IF, REG_DF};
-		  
 //---------------------------------------------------------------------------
 // DMA
 //---------------------------------------------------------------------------
@@ -966,10 +965,9 @@ module top
     else if ((last_inst == IOT_ION) & (last_inst_space == INST_SPACE_MAIN))
       TTY_INT_enable <= 1'b1;
 
-//  assign INTREQ_n = 1'b1;
+//  assign INTREQ_n = 1'b1; // for debug
   assign INTREQ_n = ~((IRQ_ttyi | IRQ_ttyo) & TTY_INT_enable)
                      | REG_IIFF;
-
 
   reg [1:0] INTGNTs;
   wire	    posedge_INTGNT = INTGNTs[0] & ~INTGNTs[1];
@@ -1247,21 +1245,13 @@ module top
       dbg_hlt = 0;
     else if(sw2_posedge)
       dbg_mode <= ~dbg_mode;
-//    else if((last_inst_addr == 15'o06722)
+//    // OS/8 PFOCAL
 //    else if((last_inst_addr == 15'o07671)
-//	    & ((dma_start_address>>1) == 15'o07200)
-//	    & (disk_block_address == 'o21) // DIR SYS:
-//	    & ((dma_start_address>>1) == 15'o03600)
-//	    & (disk_block_address == 'o0001) // DIR RKA0:
-//	    ) 
+//	    & ((dma_start_address>>1) == 15'o07000)
+//	    & (disk_block_address == 'o1567))
 //      dbg_mode <= 1'b1;
 //      dbg_hlt <= 1'b1;
-//    else if((last_inst_addr == 15'o07671)
-//	    & ((dma_start_address >>1) == 15'o07000) // OS/8 PFOCAL
-//      dbg_hlt <= 1'b1;
 //    else if(last_inst_addr == 15'o07671 ) // RK
-//      dbg_hlt <= 1'b1;
-//    else if(last_inst_addr == 15'o01207 ) // DB
 //      dbg_hlt <= 1'b1;
     else
       dbg_hlt <= 0;
@@ -1428,12 +1418,12 @@ module top
      endcase
   endfunction
   
-  wire trg_log_inst = dbg_mode ?
-//       (inst_read | inst_cp_read) :
+  wire trg_inst = dbg_mode ?
+//       (inst_read | inst_cp_read) : // for debug cp monitor
        inst_read :
        (last_inst_space == INST_SPACE_MAIN) &  posedge_RUN_HLT_n;
 
-  wire trg_log_disk = disk_read | disk_write;
+  wire trg_disk = disk_read | disk_write;
   always @(posedge sys_clk or negedge RESET_n)
     if( ~RESET_n ) begin
        dbg_regw <= "     ";
@@ -1442,7 +1432,7 @@ module top
     end
     else if (dbg_print)
       dbg_print <= 0;
-    else if( trg_log_inst ) begin
+    else if( trg_inst ) begin
        dbg_regw <= opname(last_inst);
        dbg_reg0 <= last_inst_addr;
        dbg_reg1 <= last_inst;
@@ -1452,7 +1442,7 @@ module top
        dbg_reg5 <= last_write_data;
        dbg_print<= 1'b1;
     end
-    else if ( trg_log_disk ) begin
+    else if ( trg_disk ) begin
        if(disk_read)
 	 dbg_regw <= "RK rd";
        else if(disk_write)
