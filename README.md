@@ -16,6 +16,7 @@ This document is written mostly in Japanese, so please use machine translation i
 - 2026/02/02: version 20260202, 割り込み関連のバグ修正
 - 2026/02/02: CP空間のuniversal monitorにコンテキストの保存復帰を実装しました．
 - 2026/02/06: version 20260206, 拡張メモリ関連の微修正
+- 2026/02/06: OS/8のRK2, RK3を有効化する方法についてのドキュメントを追加．
   
 ## 主なファイル一覧
 ```
@@ -81,8 +82,10 @@ This document is written mostly in Japanese, so please use machine translation i
 - ~~OS/8 BASICでSTRTRK.BAやSNOOPY.BAが動かない．~~ 動きました．
 
 ### 今後の予定，ToDo
-- 紙テープイメージからOS/8のディスクイメージを作成
+- 紙テープイメージからOS/8のディスクイメージを作成．
+  - → ある程度はできたのですが，CCL.SVがうまく作れなかったりEPICの動作が不安定なのであきらめました．
 - 磁気テープドライブエミュレータ実装．(紙テープは実装済なので，必要でなければやらないかも)
+  - → いろいろ面倒な仕様があったのであきらめました．
 
 <!--
 # 動画
