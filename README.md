@@ -63,7 +63,7 @@ This document is written mostly in Japanese, so please use machine translation i
   - [ベアメタル](doc/06-1_baremetal.md)
   - [紙テープソフト](doc/06-2_papertape.md)
   - [OS/8](doc/06-3_os8.md)
-    - [デバイスの追加について](doc/06-3_os8_reconfig.md)
+    - [RK2-3diskの有効化](doc/06-3_os8_reconfig.md)
 - [デバッグツール](doc/07_debugtool.md)
 - [関連情報・参考資料](doc/08_references.md)
 
