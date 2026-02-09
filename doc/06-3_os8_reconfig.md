@@ -40,7 +40,7 @@ OS/8 V3Q
 .DIR RKB3:
 RKB3 DOES NOT EXIST
 ```
--- BUILDを起動します．
+- BUILDを起動します．
 ```
 .R BUILD
 
