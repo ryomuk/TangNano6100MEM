@@ -2,7 +2,7 @@
 // TangNano6100MEM
 // Memory System and Peripherals for IM6100 using Tang Nano 20K
 //
-// version 20260202
+// version 20260206
 //
 // by Ryo Mukai
 //
@@ -22,6 +22,7 @@
 //             - dbg_mode (slow clock and full instruction log) implemented
 // 2026/02/01: - paper tape emulator implimented
 // 2026/02/02: - bug fixed (clear REG_IF, DF, IB on INTGNT)
+// 2026/02/06: - bug fixed (disable IF<=IB in CP space)
 //---------------------------------------------------------------------------
 
 `define USE_DBGLOG   // output debug information to DBG_TX
@@ -506,13 +507,13 @@ module top
 	 default:;
        endcase
     end
-    else if( (last_op == OP_JMP) & posedge_IFETCH)
-      {REG_IF, REG_IIFF} <= {REG_IB, 1'b0};
-    else if( last_op == OP_JMS) begin
-       if( negedge_MEMSEL_n & ~XTC) // IF<=IB before write return address
-	 {REG_IF, REG_IIFF} <= {REG_IB, 1'b0};
-       // JMS autoindex does not work ???
-    end
+    else if( last_inst_space == INST_SPACE_MAIN )
+      if((last_op == OP_JMP) & posedge_IFETCH)
+	{REG_IF, REG_IIFF} <= {REG_IB, 1'b0};
+      else if( last_op == OP_JMS )
+	if( negedge_MEMSEL_n & ~XTC) // IF<=IB before write return address
+	  {REG_IF, REG_IIFF} <= {REG_IB, 1'b0};
+         // JMS autoindex does not work ???
 //    else if(posedge_IFETCH)
 //    else if(negedge_IFETCH)
 //      if ((last_op == OP_JMS) | (last_op == OP_JMP))
@@ -1245,10 +1246,10 @@ module top
       dbg_hlt = 0;
     else if(sw2_posedge)
       dbg_mode <= ~dbg_mode;
-//    // OS/8 PFOCAL
+//    // OS/8 EPIC
 //    else if((last_inst_addr == 15'o07671)
-//	    & ((dma_start_address>>1) == 15'o07000)
-//	    & (disk_block_address == 'o1567))
+//	    & ((dma_start_address>>1) == 15'o07400)
+//	    & (disk_block_address == 'o0136))
 //      dbg_mode <= 1'b1;
 //      dbg_hlt <= 1'b1;
 //    else if(last_inst_addr == 15'o07671 ) // RK
@@ -1297,23 +1298,23 @@ module top
      endcase
   endfunction
   
-  function [15:0] MPIA(input [1:0] ia_mp);
-     case (ia_mp)
+  function [15:0] MPIA(input [8:0] op_addr);
+     case (op_addr[8:7])
        2'b00: MPIA="0 ";
        2'b01: MPIA="  ";
-       2'b10: MPIA="0I";
+       2'b10: MPIA= (op_addr[8:3] == 6'o41) ? "+I" : "0I";
        2'b11: MPIA=" I";
      endcase
   endfunction
 
   function [39:0] opname(input [11:0] opcode);
      case (opcode[11:9])
-       OP_AND: opname={"AND", MPIA(opcode[8:7])};
-       OP_TAD: opname={"TAD", MPIA(opcode[8:7])};
-       OP_ISZ: opname={"ISZ", MPIA(opcode[8:7])};
-       OP_DCA: opname={"DCA", MPIA(opcode[8:7])};
-       OP_JMS: opname={"JMS", MPIA(opcode[8:7])};
-       OP_JMP: opname={"JMP", MPIA(opcode[8:7])};
+       OP_AND: opname={"AND", MPIA(opcode[8:0])};
+       OP_TAD: opname={"TAD", MPIA(opcode[8:0])};
+       OP_ISZ: opname={"ISZ", MPIA(opcode[8:0])};
+       OP_DCA: opname={"DCA", MPIA(opcode[8:0])};
+       OP_JMS: opname={"JMS", MPIA(opcode[8:0])};
+       OP_JMP: opname={"JMP", MPIA(opcode[8:0])};
        OP_IOT: 
 	 case (opcode[11:0])
 	   IOT_SKON: opname = "SKON ";
@@ -1391,11 +1392,13 @@ module top
 	   12'o7510: opname = "SPA  ";
 	   12'o7530: opname = "SPAZL";
 	   12'o7600: opname = "CLA  ";
-	   12'o7640: opname = "SZACL";
-	   12'o7650: opname = "SNACL";
-	   12'o7700: opname = "SMACL";
-	   12'o7710: opname = "SPACL";
+	   12'o7604: opname = "LAS  ";
+	   12'o7640: opname = "SZACA";
+	   12'o7650: opname = "SNACA";
+	   12'o7700: opname = "SMACA";
+	   12'o7710: opname = "SPACA";
 	   12'o7720: opname = "SMANL";
+	   12'o7750: opname = "SPNCA";
 	   12'o7401: opname = "NOP  ";
 	   12'o7421: opname = "MQL  ";
 	   12'o7501: opname = "MQA  ";
